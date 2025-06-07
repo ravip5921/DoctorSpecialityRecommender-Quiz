@@ -1,0 +1,172 @@
+[
+    {
+        "question": "Which system component is responsible for converting raw symptoms into a disease probability vector?",
+        "options": [
+            "LLM Explanation Module",
+            "Disease Classifier",
+            "Specialist Classifier",
+            "Both b) and c)"
+        ],
+        "answer":"2"
+    },
+    {
+        "question": "What is the role of the \u201cSpecialist-Classifier\u201d?",
+        "options": [
+            "To convert probability values into specialist labels",
+            "To recommend specialists based on all predicted diseases.",
+            "To recommend specialists based on top 3 predicted diseases.",
+            "To recommend any specialists at random."
+        ],
+        "answer":"3"
+    },
+    {
+        "question": "T/F: The LLM provides its own independent disease diagnosis.",
+        "options": [
+            "True",
+            "False",
+            "",
+            ""
+        ],
+        "answer":"2"
+    },
+    {
+        "question": "T/F: The LLM module \u201cre-scores\u201d the diseases using its internal weights.",
+        "options": [
+            "True",
+            "False",
+            "",
+            ""
+        ],
+        "answer":"2"
+    },
+    {
+        "question": "Why does our system show the top 3 most likely diseases instead of the single most likely disease?",
+        "options": [
+            "To minimize compute time.",
+            "Because classifier models can only output three values.",
+            "To give users alternative hypotheses when the first choice might be ambiguous.",
+            "Because the specialist classifier cannot work with only one disease."
+        ],
+        "answer":"3"
+    },
+    {
+        "question": "What happens in the system after the top 3 diseases are picked?",
+        "options": [
+            "Specialist Classifier takes the disease labels and their probability values to recommend specialists.",
+            "Specialist Classifier takes the disease labels only to recommend specialists.",
+            "LLM (AI Chatbot) generates explanation for predicted diseases and recommends specialists.",
+            " Both b) and c)"
+        ],
+        "answer":"2"
+    },
+    {
+        "question": "What input/s does the Specialist-Classifier require?",
+        "options": [
+            "Top 3 disease names and probabilities",
+            "Top 3 disease names only",
+            "All disease names",
+            "All disease names with probabilities"
+        ],
+        "answer":"2"
+    },
+    {
+        "question": "Which of the following are the roles of LLM integration?",
+        "options": [
+            "Translate models predictions into user-friendly language",
+            "Fine-tune the disease classifier on the user\u2019s data.",
+            "Answer the follow-up questions about why a particular disease or specialist was chosen.",
+            "Both a) and c)"
+        ],
+        "answer":"4"
+    },
+    {
+        "question": "Which component in our system first converts the user\u2019s listed symptoms into a candidate disease ranking?",
+        "options": [
+            "LLM Explanation Module",
+            "Disease Classifier",
+            "Specialist Classifier",
+            "Both b) and c)"
+        ],
+        "answer":"2"
+    },
+    {
+        "question": "After the Disease Classifier predicts the top three outputs, the next step is to feed the disease labels into the:",
+        "options": [
+            "LLM Explanation Module",
+            "Specialist Classifier",
+            "Disease Classifier",
+            "Both a) and b)"
+        ],
+        "answer":"2"
+    },
+    {
+        "question": "Why does the system ask the users to choose from pre-defined symptom options, rather than letting them type 'free-text' descriptions?",
+        "options": [
+            "Because it speeds up LLM inference.",
+            "Because the Disease Classifier was trained only on structured symptom features.",
+            "To save storage space.",
+            "To ensure the Specialist Classifier runs correctly."
+        ],
+        "answer":"2"
+    },
+    {
+        "question": "Which three diseases will the user see as the \u2018top 3\u2019?\n\nGastroenteritis: 0.32\nHeart attack: 0.28\nHepatitis D: 0.15\nJaundice: 0.12\nOthers: 0.13",
+        "options": [
+            "Gastroenteritis, Jaundice, Hepatitis D",
+            "Jaundice, Hepatitis D, Others",
+            "Hepatitis D, Heart attack, Others",
+            "Gastroenteritis, Heart attack, Hepatitis D"
+        ],
+        "answer":"4"
+    },
+    {
+        "question": "If Disease A has a probability of 0.35, Disease B 0.32, Disease C 0.10, Disease D 0.18 and others <0.05, which three will be shown by the system?",
+        "options": [
+            "Disease A, Disease B, Disease C",
+            "Disease B, Disease C, Disease D",
+            "Disease D, Disease A, Disease B",
+            "Disease D, Disease A, Other"
+        ],
+        "answer":"1"
+    },
+    {
+        "question": "Which specialist does the system recommend?\n\nGastroenterologist: 0.45\nCardiologist: 0.25\nGeneral Physician: 0.20\nOthers: 0.10",
+        "options": [
+            "General Physician",
+            "Gastroenterologist",
+            "Cardiologist",
+            "No recommendation because the highest probability is less than 0.5"
+        ],
+        "answer":"2"
+    },
+    {
+        "question": "After seeing Gastroenteritis (0.32, 32%) as the top disease, the user asks the LLM: \n'Why did the model favor Gastroenteritis over heart attack?' The LLM might respond 'Because your lab values of elevated C-reactive protein (CRP) and recent history of diarrhea were the strongest factors in the random forest, giving Gastroenteritis a 32% score versus 28% for Heart attack.'\n.Which of the following follow-up questions could reveal a potential flaw?\n",
+        "options": [
+            "Did the model actually use CRP levels as an input feature?",
+            "What cutoff of CRP defined \u2018elevated\u2019?",
+            "Could diarrhea be caused by something other than Gastroenteritis?",
+            "At what probability would Heart attack become the top prediction?"
+        ],
+        "answer":"1"
+    },
+    {
+        "question": "If a patient's true condition is Jaundice (unknown to the model), but Jaundice only scores 0.12, lower than Hepatitis D (0.15), and Jaundice does not appear in the top 3, what might this suggest about the classifier's confusion?",
+        "options": [
+            "The model grouped Jaundice and Hepatitis D under the same label.",
+            "The model was biased to rank liver conditions higher.",
+            "The Specialist Classifier overruled the Disease Classifier.",
+            "The model may be mistaking Jaundice symptoms as evidence for Hepatitis D."
+        ],
+        "answer":"4"
+    },
+    {
+        "question": "Given the same patient's data, the system shows: \nGastroenteritis\t: 0.32\nHeart attack\t: 0.28 \nHepatitis D\t: 0.15 \nJaundice\t: 0.12 \nOthers\t: 0.13 \nWhy might the LLM explanation still emphasize Heart attack, even if Gastroenteritis has the highest probability?",
+        "options": [
+            "Because the LLM always ignores the top prediction.",
+            "Because the model doesn\u2019t trust its prediction for Gastroenteritis.",
+            "Because Heart attack was mentioned in a previous patient record.",
+            "Because Heart attack is clinically more urgent and flagged for priority in explanations."
+        ],
+        "answer":"4"
+    }
+]
