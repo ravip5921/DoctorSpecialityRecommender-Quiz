@@ -5,7 +5,7 @@
             "LLM Explanation Module",
             "Disease Classifier",
             "Specialist Classifier",
-            "Both b) and c)"
+            "Both Disease and Specialist Classifiers"
         ],
         "answer":"2"
     },
@@ -55,39 +55,19 @@
             "Specialist Classifier takes the disease labels and their probability values to recommend specialists.",
             "Specialist Classifier takes the disease labels only to recommend specialists.",
             "LLM (AI Chatbot) generates explanation for predicted diseases and recommends specialists.",
-            " Both b) and c)"
-        ],
-        "answer":"2"
-    },
-    {
-        "question": "What input/s does the Specialist-Classifier require?",
-        "options": [
-            "Top 3 disease names and probabilities",
-            "Top 3 disease names only",
-            "All disease names",
-            "All disease names with probabilities"
+            "LLM (AI Chatbot) recommends specialists."
         ],
         "answer":"2"
     },
     {
         "question": "Which of the following are the roles of LLM integration?",
         "options": [
-            "Translate models predictions into user-friendly language",
+            "Translate models predictions into user-friendly language.",
             "Fine-tune the disease classifier on the user\u2019s data.",
             "Answer the follow-up questions about why a particular disease or specialist was chosen.",
-            "Both a) and c)"
+            "Both except fine tuning results."
         ],
         "answer":"4"
-    },
-    {
-        "question": "Which component in our system first converts the user\u2019s listed symptoms into a candidate disease ranking?",
-        "options": [
-            "LLM Explanation Module",
-            "Disease Classifier",
-            "Specialist Classifier",
-            "Both b) and c)"
-        ],
-        "answer":"2"
     },
     {
         "question": "After the Disease Classifier predicts the top three outputs, the next step is to feed the disease labels into the:",
@@ -95,7 +75,7 @@
             "LLM Explanation Module",
             "Specialist Classifier",
             "Disease Classifier",
-            "Both a) and b)"
+            "Both Disease and Specialist Classifiers"
         ],
         "answer":"2"
     },
@@ -168,5 +148,55 @@
             "Because Heart attack is clinically more urgent and flagged for priority in explanations."
         ],
         "answer":"4"
+    },
+    {
+        "question": "Why is a Random Forest Classifier particularly well-suited to predicting diseases from a large checklist of symptoms in the Disease Classifier module?",
+        "options": [
+            "It can naturally handle missing numeric lab values without imputation",
+            "It aggregates over many decision trees to reduce overfitting on high-dimensional, sparse binary inputs",
+            "It trains faster than a single decision tree on large datasets",
+            "It outputs continuous lab-value predictions rather than probabilities"
+        ],
+        "answer": "2"
+    },
+    {
+        "question": "What is the main advantage of using a Logistic Regression for recommending specialists from exactly three disease labels?",
+        "options": [
+            "It can learn non-linear interactions between symptoms automatically",
+            "It provides class-conditional probabilities and is easy to retrain on small multiclass label sets",
+            "It requires fewer features than a Random Forest to avoid overfitting",
+            "It clusters the labels before making a recommendation"
+        ],
+        "answer": "2"
+    },
+    {
+        "question": "What inputs does the LLM explainer receive when generating its natural-language justification?",
+        "options": [
+            "Only the symptom list and the final specialist label",
+            "The symptom list, top 3 disease labels with probabilities, top 2 specialist labels with probabilities, and model architecture details",
+            "The raw decision-tree nodes from the Random Forest",
+            "Only the numeric probability vectors (no labels or symptoms)"
+        ],
+        "answer": "2"
+    },
+    {
+        "question": "Which of the following best describes what information is passed from the Disease Classifier to the Specialist Classifier?",
+        "options": [
+            "The three disease labels plus their exact probabilities",
+            "The full symptom vector",
+            "Only the three disease labels (no probabilities)",
+            "A single combined 'disease-score' computed from the top probabilities"
+        ],
+        "answer": "3"
+    },
+    {
+        "question": "If two patients have identical top-3 labels but swapped probabilities (Patient A: [0.50, 0.30, 0.20], Patient B: [0.30, 0.50, 0.20]), how will their specialist recommendations compare?",
+        "options": [
+            "The system will give the same two specialists in the same order",
+            "The system will give the same two specialists, but in reversed order",
+            "They may get completely different specialists",
+            "Cannot tell without symptom data"
+        ],
+        "answer": "1"
     }
 ]
