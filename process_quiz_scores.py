@@ -14,7 +14,7 @@ if not SUPABASE_URL or not SUPABASE_KEY:
 supabase = create_client(SUPABASE_URL, SUPABASE_KEY)
 
 # Fetch all submissions
-response = supabase.table("submissions").select("*").execute()
+response = supabase.table("patient_submissions").select("*").execute()
 if response.data is None:
     print("No data found.")
     exit()

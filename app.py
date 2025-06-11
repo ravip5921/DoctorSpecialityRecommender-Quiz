@@ -5,12 +5,27 @@ from supabase import create_client
 SUPABASE_URL = st.secrets["supabase"]["url"]
 SUPABASE_KEY = st.secrets["supabase"]["key"]
 
-# --- Load Questions ---
+# --- Load Scenarios: Patient Names ---
 @st.cache_data(ttl=600)
-def load_all_questions():
+def load_all_patient_names():
     try:
         client = create_client(SUPABASE_URL, SUPABASE_KEY)
-        response = client.table("questions").select("*").execute()
+        response = client.table("patient_questions").select("patient_name").execute()
+        patient_names = list({row["patient_name"] for row in response.data})
+        return sorted(patient_names)
+    except Exception as e:
+        st.error(f"Error loading patient names: {e}")
+        return []
+
+# --- Load Questions ---
+@st.cache_data(ttl=600)
+def load_all_questions(patient_name):
+    try:
+        client = create_client(SUPABASE_URL, SUPABASE_KEY)
+        response = client.table("patient_questions")\
+            .select("*")\
+            .eq("patient_name", patient_name)\
+            .execute()
         question_list = []
 
         for row in response.data:
@@ -37,150 +52,168 @@ def load_all_questions():
     except Exception as e:
         st.error(f"Error loading questions from Supabase: {e}")
         return []
+# --- Page Routing ---
+if "page" not in st.session_state:
+    st.session_state.page = "home"
 
-# --- Session State Initialization ---
-if "shuffled_questions" not in st.session_state:
-    all_qs = load_all_questions()
-    random.shuffle(all_qs)
+if st.session_state.page == "home":
+    st.title("DSR Scenario Quiz")
+    patient_names = load_all_patient_names()
+    selected_patient = st.selectbox("Select a patient scenario", patient_names)
+    username = st.text_input("Enter your name")
 
-    st.session_state["shuffled_questions"] = all_qs
-    st.session_state["options_shuffled"] = {}
-    st.session_state["shuffled_to_original_map"] = {}
+    if st.button("Start Quiz") and username.strip():
+        st.session_state.page = "quiz"
+        st.session_state["patient_name"] = selected_patient
+        st.session_state["username"] = username.strip()
+        st.rerun()
 
-    for q in all_qs:
-        original_opts = q["options"]
-        shuffled_opts = original_opts.copy()
-        random.shuffle(shuffled_opts)
+elif st.session_state.page == "quiz":
+    # --- Session Initialization ---
+    # --- Session State Initialization ---
+    if "shuffled_questions" not in st.session_state:
+        all_qs = load_all_questions(st.session_state["patient_name"])
+        random.shuffle(all_qs)
 
-        # Map each shuffled option to its original index (0-based)
-        mapping = {shuffled_opt: original_opts.index(shuffled_opt) for shuffled_opt in shuffled_opts}
+        st.session_state["shuffled_questions"] = all_qs
+        st.session_state["options_shuffled"] = {}
+        st.session_state["shuffled_to_original_map"] = {}
 
-        st.session_state["options_shuffled"][q["id"]] = shuffled_opts
-        st.session_state["shuffled_to_original_map"][q["id"]] = mapping
+        for q in all_qs:
+            original_opts = q["options"]
+            shuffled_opts = original_opts.copy()
+            random.shuffle(shuffled_opts)
 
-    st.session_state["answers"] = {q["id"]: None for q in all_qs}
-    st.session_state["submitted"] = False
+            # Map each shuffled option to its original index (0-based)
+            mapping = {shuffled_opt: original_opts.index(shuffled_opt) for shuffled_opt in shuffled_opts}
 
-# --- Answer Change Callback ---
-def on_option_change(qid):
-    st.session_state["answers"][qid] = st.session_state.get(f"q_{qid}", None)
+            st.session_state["options_shuffled"][q["id"]] = shuffled_opts
+            st.session_state["shuffled_to_original_map"][q["id"]] = mapping
 
-# --- Main UI Before Submission ---
-if not st.session_state["submitted"]:
-    st.title("DSR System Quiz")
-    st.text_input("Enter your name:", key="username")
-    st.write("---")
-    # Render each question in the shuffled order
-    for idx, q in enumerate(st.session_state["shuffled_questions"]):
-        qid = q["id"]
-        prompt = q["prompt"]
-        opts = st.session_state["options_shuffled"][qid]
-        st.radio(
-            label=f"Q{idx+1}. {prompt}",
-            options=opts,
-            index=None,
-            key=f"q_{qid}",
-            on_change=lambda qid=qid: on_option_change(qid),
-        )
+        st.session_state["answers"] = {q["id"]: None for q in all_qs}
+        st.session_state["submitted"] = False
+
+    # --- Answer Change Callback ---
+    def on_option_change(qid):
+        st.session_state["answers"][qid] = st.session_state.get(f"q_{qid}", None)
+
+    # --- Main UI Before Submission ---
+    if not st.session_state["submitted"]:
+        st.title("DSR System Quiz")
+        st.markdown(f"**User:** {st.session_state['username']}")
+        st.write("---")
+        # Render each question in the shuffled order
+        for idx, q in enumerate(st.session_state["shuffled_questions"]):
+            qid = q["id"]
+            prompt = q["prompt"]
+            opts = st.session_state["options_shuffled"][qid]
+            st.radio(
+                label=f"Q{idx+1}. {prompt}",
+                options=opts,
+                index=None,
+                key=f"q_{qid}",
+                on_change=lambda qid=qid: on_option_change(qid),
+            )
 
 
-    st.write("---")
-    
-    # Answer count
-    num_answered = sum(ans is not None for ans in st.session_state["answers"].values())
-    total_qs = len(st.session_state["shuffled_questions"])
-    st.info(f"**{num_answered} out of {total_qs}** questions answered.")
+        st.write("---")
+        
+        # Answer count
+        num_answered = sum(ans is not None for ans in st.session_state["answers"].values())
+        total_qs = len(st.session_state["shuffled_questions"])
+        st.info(f"**{num_answered} out of {total_qs}** questions answered.")
 
-    # Submission
-    if st.button("Submit"):
-        if not st.session_state["username"].strip():
-            st.warning("Please enter your name before submitting.")
-        else:
-            st.session_state["submitted"] = True
-            st.rerun()
+        # Submission
+        if st.button("Submit"):
+            if not st.session_state["username"].strip():
+                st.warning("Please enter your name before submitting.")
+            else:
+                st.session_state["submitted"] = True
+                st.rerun()
 
-else:
-    username = st.session_state.get("username", "anonymous")
-    answers = st.session_state["answers"]
-    shuffled_qs = st.session_state["shuffled_questions"]
-    supabase = create_client(SUPABASE_URL, SUPABASE_KEY)
+    else:
+        username = st.session_state.get("username", "anonymous")
+        answers = st.session_state["answers"]
+        shuffled_qs = st.session_state["shuffled_questions"]
+        supabase = create_client(SUPABASE_URL, SUPABASE_KEY)
 
-    def write_submissions(username, answers, shuffled_qs):
-        all_questions = {q["id"]: q for q in load_all_questions()}
-        records = []
+        def write_submissions(username, answers, shuffled_qs):
+            all_questions = {q["id"]: q for q in load_all_questions(st.session_state["patient_name"])}
+            records = []
 
+            for q in shuffled_qs:
+                qid = q["id"]
+                chosen = answers.get(qid)
+                if chosen is None:
+                    chosen_str = None
+                    is_corr = False
+                else:
+                    # Use original option mapping to determine correctness
+                    original_index = st.session_state["shuffled_to_original_map"][qid].get(chosen, -1)
+                    correct_index = all_questions[qid]["correct_index"]
+                    correct_option = all_questions[qid]["options"][correct_index]
+
+                    chosen_str = chosen
+                    is_corr = (original_index == correct_index)
+
+                records.append({
+                    "username": username,
+                    "question_id": qid,
+                    "chosen_option": chosen_str,
+                    "is_correct": is_corr,
+                    "patient_name": st.session_state["patient_name"],
+                })
+
+            try:
+                response = supabase.table("patient_submissions").insert(records).execute()
+                st.success("Results submitted successfully.")
+            except Exception as e:
+                st.error(f"Failed to save results: {e}")
+
+        write_submissions(username, answers, shuffled_qs)
+
+        # Compute score
+        # Score
+        num_correct = 0
         for q in shuffled_qs:
             qid = q["id"]
+            selected = answers.get(qid)
+            if selected is None:
+                continue
+
+            # Get the original index of selected option
+            original_index = st.session_state["shuffled_to_original_map"][qid].get(selected, -1)
+
+            # Check if this original index matches correct_index
+            if original_index == q["correct_index"]:
+                num_correct += 1
+
+        st.success(f"Thanks, **{username}**! You answered **{num_correct}** questions correctly.")
+
+        st.write("---")
+        # Show per-question feedback
+        # Show per-question feedback
+        for idx, q in enumerate(shuffled_qs):
+            qid = q["id"]
+            prompt = q["prompt"]
             chosen = answers.get(qid)
+            
+            st.markdown(f"**Q{idx + 1}. {prompt}**")
+
             if chosen is None:
-                chosen_str = None
-                is_corr = False
-            else:
-                # Use original option mapping to determine correctness
-                original_index = st.session_state["shuffled_to_original_map"][qid].get(chosen, -1)
-                correct_index = all_questions[qid]["correct_index"]
-                correct_option = all_questions[qid]["options"][correct_index]
+                st.markdown("<span style='color:gray;'>No answer selected.</span>", unsafe_allow_html=True)
+                continue
 
-                chosen_str = chosen
-                is_corr = (original_index == correct_index)
+            original_index = st.session_state["shuffled_to_original_map"][qid].get(chosen, -1)
+            is_correct = original_index == q["correct_index"]
 
-            records.append({
-                "username": username,
-                "question_id": qid,
-                "chosen_option": chosen_str,
-                "is_correct": is_corr,
-            })
+            color = "green" if is_correct else "red"
+            status = "Correct" if is_correct else "Incorrect"
 
-        try:
-            response = supabase.table("submissions").insert(records).execute()
-            st.success("Results submitted successfully.")
-        except Exception as e:
-            st.error(f"Failed to save results: {e}")
+            st.markdown(
+                f"<span style='color:{color};'><b>Your answer:</b> {chosen}</span><br>"
+                f"<span style='color:{color};'><i>{status}</i></span>",
+                unsafe_allow_html=True
+            )
 
-    write_submissions(username, answers, shuffled_qs)
-
-    # Compute score
-    # Score
-    num_correct = 0
-    for q in shuffled_qs:
-        qid = q["id"]
-        selected = answers.get(qid)
-        if selected is None:
-            continue
-
-        # Get the original index of selected option
-        original_index = st.session_state["shuffled_to_original_map"][qid].get(selected, -1)
-
-        # Check if this original index matches correct_index
-        if original_index == q["correct_index"]:
-            num_correct += 1
-
-    st.success(f"Thanks, **{username}**! You answered **{num_correct}** questions correctly.")
-
-    st.write("---")
-    # Show per-question feedback
-    # Show per-question feedback
-    for idx, q in enumerate(shuffled_qs):
-        qid = q["id"]
-        prompt = q["prompt"]
-        chosen = answers.get(qid)
-        
-        st.markdown(f"**Q{idx + 1}. {prompt}**")
-
-        if chosen is None:
-            st.markdown("<span style='color:gray;'>No answer selected.</span>", unsafe_allow_html=True)
-            continue
-
-        original_index = st.session_state["shuffled_to_original_map"][qid].get(chosen, -1)
-        is_correct = original_index == q["correct_index"]
-
-        color = "green" if is_correct else "red"
-        status = "Correct" if is_correct else "Incorrect"
-
-        st.markdown(
-            f"<span style='color:{color};'><b>Your answer:</b> {chosen}</span><br>"
-            f"<span style='color:{color};'><i>{status}</i></span>",
-            unsafe_allow_html=True
-        )
-
-    st.stop()
+        st.stop()
