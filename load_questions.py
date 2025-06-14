@@ -22,7 +22,7 @@ with open("scenario_quiz_questions.json", "r") as f:
 
 # # Optional: Clear old records before inserting
 # supabase.table("quiz_scores").delete().neq("username", "").execute()
-# supabase.table("submissions").delete().neq("username", "").execute()
+# supabase.table("patient_submissions").delete().neq("username", "").execute()
 supabase.table("patient_questions").delete().neq("prompt", "").execute()
 
 # --- Upload to Supabase ---
