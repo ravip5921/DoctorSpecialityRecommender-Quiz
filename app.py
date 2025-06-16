@@ -57,7 +57,7 @@ if "page" not in st.session_state:
     st.session_state.page = "home"
 
 if st.session_state.page == "home":
-    st.title("DSR Scenario Quiz")
+    st.title("DSR System Quiz")
     patient_names = load_all_patient_names()
     selected_patient = st.selectbox("Select a patient scenario", patient_names)
     username = st.text_input("Enter your name")
