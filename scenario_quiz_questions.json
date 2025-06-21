@@ -1,56 +1,55 @@
 {
   "MichaelBrown": [
     {
-      "question": "Which component of the system converts the binary symptom vector into disease probabilities?",
-      "options": [
-        "Input Preprocessor",
-        "Disease Classifier (Random Forest)",
-        "Specialist Classifier (Logistic Regression)",
-        "LLM Explanation Module"
-      ],
-      "answer": "2"
+        "question": "Why is 'red spots over body' a strong indicator for diseases like Chicken Pox and Acne in Michael's case?",
+        "options": [
+            "Because it is linked to of skin-related diseases in training data",
+            "Because Random Forest directly assigns specialists based on symptoms",
+            "Because all red symptoms map to Dermatologists",
+            "Because softmax only supports Dermatology labels"
+        ],
+        "answer": "1"
     },
     {
-      "question": "What is the purpose of one-hot encoding the top-3 diseases before specialist prediction?",
-      "options": [
-        "To reduce symptom noise",
-        "To create a fixed-length input for logistic regression",
-        "To rank the diseases by importance",
-        "To normalize probabilities"
-      ],
-      "answer": "2"
+        "question": "Why is Chicken pox more likely than Acne or Hepatitis C for Michael?",
+        "options": [
+            "Because multiple symptoms like skin rash and red spots commonly co-occur in Chicken pox cases in the training data",
+            "Because Hepatitis C is always assigned lower priority",
+            "Because training data does not contain any information about Acne and Hepatitis C",
+            "Because one-hot encoding removed the other options"
+        ],
+        "answer": "1"
     },
     {
-      "question": "What role does the softmax function play in the specialist recommendation model?",
-      "options": [
-        "It chooses the single best specialist",
-        "It converts raw model scores into a probability distribution",
-        "It encodes the symptom vector",
-        "It averages the tree outputs"
-      ],
-      "answer": "2"
+        "question": "Why would removing 'skin_rash' from Michael's symptoms affect the chance of a Dermatologist being recommended?",
+        "options": [
+            "Because it weakens the model's confidence in skin diseases, which are mapped to Dermatologists",
+            "Because it causes the softmax to ignore skin-related features",
+            "Because Random Forest directly removes specialist labels",
+            "Because one-hot encoding breaks"
+        ],
+        "answer": "1"
     },
     {
-      "question": "Which Random Forest hyperparameter controls the number of trees?",
-      "options": [
-        "max_depth",
-        "n_estimators",
-        "class_weight",
-        "max_features"
-      ],
-      "answer": "2"
+        "question": "Why does the model show Acne as the second prediction even though its probability is much lower than Chicken pox?",
+        "options": [
+            "Because it's still the second most likely diagnosis based on Michael's symptoms",
+            "Because the system must alphabetize the outputs",
+            "Because Acne is preferred in absence of CRP values",
+            "Because Dermatologist needs at least two diseases"
+        ],
+        "answer": "1"
     },
     {
-      "question": "Which Logistic Regression parameter sets the maximum number of training iterations?",
-      "options": [
-        "n_estimators",
-        "max_iter",
-        "random_state",
-        "class_weight"
-      ],
-      "answer": "2"
+        "question": "Why might Hepatitis C receive a low but nonzero probability in Michael's output?",
+        "options": [
+            "Because symptoms like fatigue and lethargy partially match cases labeled as Hepatitis C in training",
+            "Because softmax enforces a fixed minimum probability",
+            "Because all liver conditions are boosted",
+            "Because the model assigns random minimum probabilities to all classes (diseases)"
+        ],
+        "answer": "1"
     },
-
     {
       "question": "What binary vector entry corresponds to the symptom 'fatigue'?",
       "options": [
@@ -62,34 +61,34 @@
       "answer": "1"
     },
     {
-      "question": "What were the top three disease predictions for Michael and their confidences?",
-      "options": [
-        "Chicken pox (41.5%), Acne (10.5%), Hepatitis C (6.5%)",
-        "Acne (41.5%), Chicken pox (10.5%), Hepatitis C (6.5%)",
-        "Hepatitis C (41.5%), Chicken pox (10.5%), Acne (6.5%)",
-        "Chicken pox (10.5%), Acne (6.5%), Hepatitis C (41.5%)"
-      ],
-      "answer": "1"
+        "question": "Why might adding 'itching' to Michael's symptoms further increase Chicken pox probability?",
+        "options": [
+            "Because itching often co-occurs with Chicken pox in training data and reinforces its path in decision trees",
+            "Because softmax favors longer symptom vectors and adding any random symptoms will increase probability scores of previously predicted diseases.",
+            "Because itching encodes probability weights",
+            "Because Hepatologist is suppressed"
+        ],
+        "answer": "1"
     },
     {
-      "question": "Which symptom in Michael's scenario is represented by the feature 'red_spots_over_body'?",
-      "options": [
-        "Clusters of small, itchy papules",
-        "General fatigue",
-        "Intermittent palpitations",
-        "Patchy skin rash"
-      ],
-      "answer": "1"
+        "question": "Why does averaging across trees help the model produce a more stable prediction for Michael's case?",
+        "options": [
+            "Because it reduces variance from individual decision trees and balances different symptom combinations",
+            "Because it forces probabilities toward 50%",
+            "Because it smooths out specialist labels",
+            "Because the tree depth is increased"
+        ],
+        "answer": "1"
     },
     {
-      "question": "Which specialist did the model recommend most strongly for Michael?",
-      "options": [
-        "Dermatologist",
-        "Cardiologist",
-        "Neurologist",
-        "Hepatologist"
-      ],
-      "answer": "1"
+        "question": "Why does the model not recommend a Cardiologist for Michael despite reporting fatigue?",
+        "options": [
+            "Because model considers all input symptoms to provide output and fatigue is an overlapping symptom with several diseases.",
+            "Because fatigue is filtered by the LLM module",
+            "Because Cardiologist is never recommended in this setup",
+            "Because Dermatologist is the default"
+        ],
+        "answer": "1"
     },
     {
       "question": "Why does the Random Forest average over 200 trees instead of using a single tree?",
@@ -112,7 +111,7 @@
       "answer": "1"
     },
     {
-      "question": "How would removing 'skin_rash' from Michael's inputs affect the disease probabilities?",
+      "question": "How would removing 'red_spots_over_body' from Michael's inputs affect the disease probabilities?",
       "options": [
         "Chicken pox probability would likely decrease",
         "All disease probabilities would sum to more than 100%",
@@ -122,9 +121,9 @@
       "answer": "1"
     },
     {
-      "question": "Why does the symptom 'red_spots_over_body' increase the probability of Chicken pox?",
+      "question": "Why do the symptoms 'red_spots_over_body' and 'skin_rash' increase the probability of Chicken pox?",
       "options": [
-        "Because it appears in many leaf nodes associated with Chicken pox during training",
+        "Because they appear in many leaf nodes associated with Chicken pox during training",
         "Because LLM assigns it manually",
         "Because one-hot encoding boosts its weight",
         "Because softmax multiplies it by a constant"
@@ -141,14 +140,13 @@
       ],
       "answer": "1"
     },
-
     {
-      "question": "Explain in plain words why averaging many trees makes the prediction more stable.",
+      "question": "How can a multiclass classifier (e.g., multinomial logistic regression) be used in a specialist recommender system?",
       "options": [
-        "It reduces random variance by combining multiple weak learners",
-        "It always increases the probability of the first label",
-        "It normalizes symptom severity",
-        "It removes the need for softmax"
+        "By taking the top predicted diseases as input and producing a probability distribution over specialist categories",
+        "By clustering doctors into topic models based on symptom text",
+        "By generating new symptom features through similarity embeddings",
+        "By scoring lab values directly and matching to doctors"
       ],
       "answer": "1"
     },
@@ -195,73 +193,82 @@
   ],
   "JaneSmith": [
     {
-      "question": "Which model component converts Jane's symptom vector into disease probabilities?",
+      "question": "Why does the model give Gastroenterologist such a high confidence score in Jane's case?",
       "options": [
-        "Input Preprocessor",
-        "Random Forest Disease Classifier",
-        "Logistic Regression Specialist Classifier",
-        "LLM Explanation Module"
-      ],
-      "answer": "2"
-    },
-    {
-      "question": "What step is necessary for a uniform input to the Logistic Regression model for specialist prediction?",
-      "options": [
-        "One-hot encoding for top 3 disease labels",
-        "Reduces number of trees",
-        "Normalizes symptom values",
-        "Calculates Gini impurity"
+        "Because Gastroenteritis was predicted as the top disease and it's strongly associated with that specialist in training data",
+        "Because it is the default recommendation for digestive symptoms",
+        "Because vomiting is always mapped to Gastroenterologist",
+        "Because softmax boosts the first option"
       ],
       "answer": "1"
     },
     {
-      "question": "What is the role of softmax in the specialist model?",
+      "question": "Why does the model not show just one disease, even when the top prediction is much higher than the rest?",
       "options": [
-        "Filters out low-score specialists",
-        "Converts scores into probabilities summing to 1",
-        "Selects the top disease",
-        "Encodes symptom names"
-      ],
-      "answer": "2"
-    },
-    {
-      "question": "Which symptom binary feature corresponds to 'diarrhoea'?",
-      "options": [
-        "1 if watery stools present, 0 otherwise",
-        "Probability of dehydration",
-        "Normalized stool frequency",
-        "LLM-predicted severity"
+        "To expose uncertainty and offer users alternative possibilities",
+        "To match the number of specialists",
+        "To avoid overwhelming the user",
+        "To prevent needing LLM assistance"
       ],
       "answer": "1"
     },
     {
-      "question": "Why does the system present three diseases instead of one?",
+      "question": "Why does the system use symptoms like nausea and diarrhoea instead of asking for lab values?",
       "options": [
-        "To show model uncertainty and alternatives",
-        "Because three labels are required for input",
-        "To increase computational load",
-        "To confuse users"
-      ],
-      "answer": "1"
-    },
-
-    {
-      "question": "What were Jane's top three diseases and their confidences?",
-      "options": [
-        "Gastroenteritis (30.5%), Chronic cholestasis (22.0%), Malaria (10.5%)",
-        "Chronic cholestasis (30.5%), Gastroenteritis (22.0%), Malaria (10.5%)",
-        "Malaria (30.5%), Gastroenteritis (22.0%), Chronic cholestasis (10.5%)",
-        "Gastroenteritis (10.5%), Malaria (22.0%), Chronic cholestasis (30.5%)"
+        "Because it was trained only on symptom checklists and not lab data",
+        "Because lab values are harder to visualize",
+        "Because symptoms don't need softmax normalization",
+        "Because nausea is always more accurate"
       ],
       "answer": "1"
     },
     {
-      "question": "Which specialist did the model recommend most strongly for Jane?",
+      "question": "Why might the model choose Malaria as a lower-ranked prediction despite a weak symptom match?",
       "options": [
-        "Gastroenterologist",
-        "Internal Medicine",
-        "Infectious Disease",
-        "General Surgeon"
+        "Because it shares partial overlap (e.g., vomiting) with Jane's input, so it gets a small score from a few trees",
+        "Because the specialist model prefers it",
+        "Because Malaria is common in the training dataset",
+        "Because diarrhoea directly maps to Malaria"
+      ],
+      "answer": "1"
+    },
+    {
+      "question": "Why does softmax assign a nonzero probability to Internal Medicine even though it was not the top specialist?",
+      "options": [
+        "Because softmax ensures every class gets some share of the total score, and Internal Medicine is partially linked to Jane's second disease",
+        "Because the model randomly selects a second option",
+        "Because Internal Medicine is the fallback option",
+        "Because the LLM forced the selection of Internal Medicine as the second recommendation"
+      ],
+      "answer": "1"
+    },
+    {
+      "question": "Why is one-hot encoding used before the Logistic Regression model instead of passing symptoms again?",
+      "options": [
+        "Because the specialist model only learns from disease names, not raw symptoms",
+        "Because symptoms are too noisy for logistic regression",
+        "Because it's faster to code that way",
+        "Because it simplifies tree traversal"
+      ],
+      "answer": "1"
+    },
+    {
+      "question": "Why is it helpful for a user to see Chronic cholestasis listed even though it's not the top diagnosis?",
+      "options": [
+        "Because it reveals alternative interpretations the model considers, which may aid real clinical decision-making",
+        "Because it helps balance softmax",
+        "Because the specialist depends on seeing three diseases",
+        "Because it is needed to trigger the LLM"
+      ],
+      "answer": "1"
+    },
+    {
+      "question": "Why might a patient's ranking of diseases change if they had reported just two symptoms instead of four?",
+      "options": [
+        "Because Random Forest decisions rely heavily on symptom combinations and fewer symptoms change the branching logic",
+        "Because fewer symptoms are always more accurate",
+        "Because the top diseases are selected alphabetically when fewer symptoms are present",
+        "Because softmax behaves differently with two inputs"
       ],
       "answer": "1"
     },
@@ -336,7 +343,7 @@
       "answer": "1"
     },
     {
-      "question": "Which follow-up question would reveal if the model used lab values like CRP?",
+      "question": "If the LLM explanation uses lab values like \"...high CRP values indicate...\", which follow-up question to the LLM would reveal that the model did not actually use lab values like CRP?",
       "options": [
         "Did the model actually use CRP levels as an input feature?",
         "What was the patient's temperature?",
@@ -356,7 +363,7 @@
       "answer": "1"
     },
     {
-      "question": "After Jane sees Chronic cholestasis at 22.0%, which question probes why it wasn't top-1?",
+      "question": "After Jane sees Chronic cholestasis at 22.0%, which question probes why it wasn't at the topmost?",
       "options": [
         "Which symptom splits favored Gastroenteritis over cholestasis?",
         "What LR solver was used?",
@@ -388,72 +395,82 @@
   ],
   "AliceJohnson": [
     {
-      "question": "Which component processes Alice's binary symptom vector into disease scores?",
+      "question": "Why does the system suggest Neurological conditions for Alice rather than a Cardiac or skin conditions?",
       "options": [
-        "Input Preprocessor",
-        "Random Forest",
-        "Logistic Regression",
-        "LLM"
-      ],
-      "answer": "2"
-    },
-    {
-      "question": "What were Alice's top three diseases and confidences?",
-      "options": [
-        "Migraine (23%), Hypertension (22%), Hypoglycemia (21%)",
-        "Hypertension (23%), Migraine (22%), Hypoglycemia (21%)",
-        "Hypoglycemia (23%), Migraine (22%), Hypertension (21%)",
-        "Migraine (21%), Hypoglycemia (22%), Hypertension (23%)"
+        "Because symptoms like slurred speech, visual disturbances, and headache are strongly associated with neurological conditions in the model's training data",
+        "Because the model assigns all dizziness cases to neurologists",
+        "Because neurologists were overrepresented in training",
+        "Because cardiologists don't treat slurred speech"
       ],
       "answer": "1"
     },
     {
-      "question": "Why is one-hot encoding of disease labels necessary before passing them into Logistic Regression?",
+      "question": "Why might the model assign Hypoglycemia a lower probability even though dizziness is a symptom?",
       "options": [
-        "Encodes top-3 diseases for LR input",
-        "Filters out low probabilities",
-        "Computes Gini impurity",
-        "Averages tree outputs"
+        "Because dizziness also overlaps with Migraine and Hypertension, and the model's trees weigh these more heavily when paired with visual disturbances",
+        "Because the model does not recognize dizziness at all since it is appears as a symptom for many diseases.",
+        "Because softmax removes low-ranking diseases",
+        "Because the symptom vector was incorrectly processed"
       ],
       "answer": "1"
     },
     {
-      "question": "What is the benefit of providing all three top-predicted diseases to the specialist model?",
+      "question": "Why does visual disturbance increase the likelihood of Migraine in the Random Forest model?",
       "options": [
-        "To capture uncertainty and alternatives",
-        "Because LR requires three inputs",
-        "To inflate probabilities",
-        "To confuse users"
+        "Because in training data, visual issues commonly co-occurred with Migraine-labeled examples, influencing the tree splits",
+        "Because visual symptoms always trigger softmax",
+        "Because dizziness reduces visual accuracy",
+        "Because Logistic Regression prefers visual cues"
       ],
       "answer": "1"
     },
     {
-      "question": "Why does the model use softmax when recommending specialists?",
+      "question": "Why doesn't the model simply return a single most likely diagnosis and specialist?",
       "options": [
-        "Selects the top disease",
-        "Converts raw scores into probabilities summing to 1",
-        "Encodes symptoms",
-        "Computes Gini impurity"
-      ],
-      "answer": "2"
-    },
-    {
-      "question": "Who was the highest-confidence specialist based on Alice's predicted conditions?",
-      "options": [
-        "Neurologist",
-        "Endocrinologist",
-        "Cardiologist",
-        "Dermatologist"
+        "To communicate uncertainty and provide alternative plausible options",
+        "Because softmax cannot rank items",
+        "Because it cannot sort probabilities",
+        "Because LLM decides the number of outputs"
       ],
       "answer": "1"
     },
     {
-      "question": "Which symptom maps to the feature 'slurred_speech'?",
+      "question": "Why might Alice's symptoms be misinterpreted as Hypoglycemia rather than stroke?",
       "options": [
-        "Brief spells of slurred speech",
-        "Persistent headache",
-        "Dizzy spells",
-        "Visual disturbances"
+        "Because both share overlapping symptoms like dizziness and fatigue, and the model might have seen more training data for Hypoglycemia",
+        "Because the Random Forest ignores dizziness",
+        "Because Logistic Regression prioritizes unrelated classes",
+        "Because LLM explanations bias toward Hypoglycemia"
+      ],
+      "answer": "1"
+    },
+    {
+      "question": "Why does softmax assign a small probability to the second specialist instead of showing only one?",
+      "options": [
+        "Because all specialists receive some nonzero weight",
+        "Because two outputs are hardcoded",
+        "Because Gini impurity controls softmax",
+        "Because this makes the UI easier to read"
+      ],
+      "answer": "1"
+    },
+    {
+      "question": "Why might removing 'slurred speech' from Alice's input cause Neurologist to no longer be the top specialist?",
+      "options": [
+        "Because slurred speech is a critical discriminative feature for neurological conditions in the model, and without it, the probability mass redistributes",
+        "Because softmax fails without slurred speech",
+        "Because slurred speech overrides all diseases",
+        "Because the symptom vector becomes incomplete"
+      ],
+      "answer": "1"
+    },
+    {
+      "question": "Why is it helpful to show confidence scores (e.g. 92% Neurologist, 4% Endocrinologist) instead of only showing labels?",
+      "options": [
+        "Because it communicates how confident the system is and helps users understand the level of ambiguity in the recommendation",
+        "Because the model always generates numbers",
+        "Because LLMs require percentages for explanations",
+        "Because they are needed to activate decision trees"
       ],
       "answer": "1"
     },
@@ -528,7 +545,7 @@
       "answer": "1"
     },
     {
-      "question": "Which follow-up would reveal if lab values influenced Alice's scores?",
+      "question": "If the LLM explanation uses lab values like \"...high blood pressure indicate...\", which follow-up question to the LLM would reveal if lab values influenced Alice's scores?",
       "options": [
         "Did the model actually use blood pressure readings as input?",
         "What is the Gini impurity threshold?",
@@ -560,7 +577,7 @@
     {
       "question": "A user sees Hypertension ranked 2nd and wonders if it's less relevant than Migraine. What question helps them understand this?",
       "options": [
-        "Which symptoms specifically triggered Hypertension in the trees?",
+        "Which symptoms specifically triggered Hypertension in the random trees used for classification?",
         "What was the model's training accuracy?",
         "How many features are used by softmax?",
         "Was the output normalized?"
@@ -570,7 +587,7 @@
     {
       "question": "Alice is told Neurologist (92%) and Endocrinologist (4%) are top picks. What explains the specialist split?",
       "options": [
-        "Neurologist is more directly tied to top disease (Migraine); Endocrinologist maps to Hypoglycemia",
+        "Neurologist is more directly tied to top disease (Migraine)",
         "Endocrinologist is always second",
         "Softmax was biased",
         "LLM prefers Neurologist"
@@ -579,77 +596,87 @@
     }
   ],
   "EmilyDavis": [
-    {
-      "question": "Which model is responsible for interpreting symptom presence into likely disease outcomes?",
-      "options": [
-        "Input Preprocessor",
-        "Random Forest Disease Classifier",
-        "Logistic Regression Specialist Classifier",
-        "LLM"
-      ],
-      "answer": "2"
-    },
-    {
-      "question": "What were Emily's top three diseases and their confidences?",
-      "options": [
-        "Malaria (81.5%), Heart attack (6.5%), Allergy (4.0%)",
-        "Heart attack (81.5%), Malaria (6.5%), Allergy (4.0%)",
-        "Allergy (81.5%), Malaria (6.5%), Heart attack (4.0%)",
-        "Malaria (4.0%), Heart attack (6.5%), Allergy (81.5%)"
-      ],
-      "answer": "1"
-    },
-    {
-      "question": "What does one-hot encoding accomplish before specialist prediction?",
-      "options": [
-        "Encodes top diseases into fixed vector",
-        "Reduces symptom features",
-        "Computes Gini impurity",
-        "Normalizes probabilities"
-      ],
-      "answer": "1"
-    },
-    {
-      "question": "Why are three disease labels passed to the specialist model?",
-      "options": [
-        "To represent uncertainty and alternatives",
-        "Because LR cannot handle fewer",
-        "To inflate probabilities",
-        "To improve Gini impurity"
-      ],
-      "answer": "1"
-    },
-    {
-      "question": "What is the function of softmax in the specialist recommendation?",
-      "options": [
-        "Selects the top disease",
-        "Normalizes scores into probabilities",
-        "Averages tree outputs",
-        "Encodes symptom names"
-      ],
-      "answer": "2"
-    },
-    {
-      "question": "Which symptom corresponds to 'chills' in Emily's case?",
-      "options": [
-        "Uncontrollable shivering last night",
-        "Repeated vomiting",
-        "High fever",
-        "Heavy sweating"
-      ],
-      "answer": "1"
-    },
-    {
-      "question": "Which specialist was recommended most strongly for Emily?",
-      "options": [
-        "Internal Medicine",
-        "Pulmonologist",
-        "Allergist",
-        "Cardiologist"
-      ],
-      "answer": "1"
-    },
-    {
+  {
+    "question": "Why does the model predict Malaria as the top disease for Emily instead of Heart attack or Allergy?",
+    "options": [
+      "Because symptoms like chills, high fever, sweating, and vomiting closely match Malaria patterns seen during training, making it a strong match across many decision trees",
+      "Because chills are exclusive to Malaria",
+      "Because softmax amplifies the first disease in the input",
+      "Because the LLM ranked Malaria highest"
+    ],
+    "answer": "1"
+  },
+  {
+    "question": "Why might Allergy still appear as a low-probability prediction (e.g., 4%) even when Malaria is highly likely?",
+    "options": [
+      "Because the softmax function assigns some probability mass to every class, reflecting partial overlap in symptoms",
+      "Because the LLM assigns scores manually",
+      "Because Random Forest always includes it",
+      "Because the model uses past case frequencies"
+    ],
+    "answer": "1"
+  },
+  {
+    "question": "Why does removing 'muscle_pain' from Emily's symptoms likely reduce the probability of Malaria?",
+    "options": [
+      "Because muscle pain is one of several key features learned from Malaria cases and contributes to Malaria-leaning tree splits",
+      "Because it decreases model accuracy",
+      "Because LLM cannot interpret muscle-related features",
+      "Because Logistic Regression requires it"
+    ],
+    "answer": "1"
+  },
+  {
+    "question": "Why might Heart attack appear as the second prediction even though many of Emily's symptoms are non-cardiac?",
+    "options": [
+      "Because some symptoms like sweating and vomiting overlap between Malaria and cardiac conditions, creating ambiguity in tree paths",
+      "Because Heart attack is randomly included",
+      "Because Logistic Regression overrides Random Forest",
+      "Because LLM favors urgent diseases"
+    ],
+    "answer": "1"
+  },
+  {
+    "question": "Why does the model use probabilities rather than simply showing a single disease and specialist recommendation?",
+    "options": [
+      "To help users understand model uncertainty and explore alternative diagnoses when symptoms are ambiguous",
+      "Because the UI is designed for multiple outputs",
+      "Because softmax cannot show just one",
+      "Because probabilities activate Gini splits"
+    ],
+    "answer": "1"
+  },
+  {
+    "question": "Why might Internal Medicine be the top recommended specialist for Emily despite her symptoms matching Malaria?",
+    "options": [
+      "Because Internal Medicine covers systemic infections like Malaria, and the model learns this association from training examples",
+      "Because it always appears first alphabetically",
+      "Because the LLM prefers generalists",
+      "Because the model can't recommend specialists directly"
+    ],
+    "answer": "1"
+  },
+  {
+    "question": "Why would a disease like Dengue (not in top-3) be missed by the model even if Emily's symptoms seem consistent with it?",
+    "options": [
+      "Because Malaria and the other diseases share highly overlapping symptoms and dominate the prediction through stronger tree-path associations in training",
+      "Because Dengue was filtered out",
+      "Because softmax suppresses tropical diseases",
+      "Because Gini ignores blood-based symptoms"
+    ],
+    "answer": "1"
+  },
+  {
+    "question": "Why is it important to ask if bloodwork or lab values were actually used in the prediction?",
+    "options": [
+      "Because lab features may falsely appear in explanations even if the model didn't use them",
+      "Because lab values always lower accuracy",
+      "Because Random Forests require numeric lab inputs",
+      "Because softmax discards lab results"
+    ],
+    "answer": "1"
+  },
+  {
       "question": "If two patients have similar symptoms but Emily's case scores Malaria highest and another scores Heart Attack highest, what may differ?",
       "options": [
         "Which symptom paths trees split on most strongly",
@@ -710,7 +737,7 @@
       "answer": "1"
     },
     {
-      "question": "Which follow-up question would check whether lab values influenced Emily's scores?",
+      "question": "If the LLM explanation uses lab values like \"...high blood pressure indicate...\", which follow-up question to the LLM would reveal if lab values influenced Emily's scores?",
       "options": [
         "Did the model actually use any blood work inputs?",
         "How many trees predicted Heart attack?",
@@ -770,7 +797,7 @@
       "answer": "1"
     },
     {
-      "question": "Emily's specialist output changed when she added 'headache.' What does this reveal about the model?",
+      "question": "Emily's specialist output changed when 'headache' is added. What does this reveal about the model?",
       "options": [
         "It is sensitive to specific input changes and re-aggregates predictions accordingly",
         "It always lowers older scores when new symptoms are added",
