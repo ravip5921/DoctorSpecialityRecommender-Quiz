@@ -27,6 +27,7 @@ supabase.table("patient_questions").delete().neq("prompt", "").execute()
 
 # --- Upload to Supabase ---
 for patient_name,questions in scenario_questions.items():
+    count = 0
     for q in questions:
         prompt = q["question"]
         options = q["options"]
@@ -46,3 +47,6 @@ for patient_name,questions in scenario_questions.items():
 
         if response:
             print(f"Inserted: {prompt}")
+            count = count + 1
+    
+    print(f"\n-----Inserted {count} questions for {patient_name}------\n")

@@ -71,14 +71,14 @@
         "answer": "1"
     },
     {
-        "question": "Why does averaging across trees help the model produce a more stable prediction for Michael's case?",
-        "options": [
-            "Because it reduces variance from individual decision trees and balances different symptom combinations",
-            "Because it forces probabilities toward 50%",
-            "Because it smooths out specialist labels",
-            "Because the tree depth is increased"
-        ],
-        "answer": "1"
+      "question": "What is the primary reason for using a Random Forest classifier as the disease prediction model in this system?",
+      "options": [
+        "To take advantage of the ensemble method's ability to reduce variance and improve overall performance",
+        "To handle high-dimensional symptom data and reduce overfitting",
+        "To provide a simple, interpretable model for disease prediction",
+        "To incorporate prior knowledge about disease-symptom relationships into the model"
+      ],
+      "answer": "1"
     },
     {
         "question": "Why does the model not recommend a Cardiologist for Michael despite reporting fatigue?",
@@ -189,6 +189,16 @@
         "What is the patient's CRP level?"
       ],
       "answer": "1"
+    },
+    {
+      "question": "If the softmax probability of the second specialist increased from 5% to 20%, what could have changed?",
+      "options": [
+        "A third disease with strong weight for that specialist was added",
+        "The LLM intervened",
+        "Softmax was disabled",
+        "One-hot encoding was dropped"
+      ],
+      "answer": "1"
     }
   ],
   "JaneSmith": [
@@ -233,12 +243,12 @@
       "answer": "1"
     },
     {
-      "question": "Why does softmax assign a nonzero probability to Internal Medicine even though it was not the top specialist?",
+      "question": "How does the specialist recommendation model (Multinomial Logistic Regression) handle the issue of class imbalance, where some specialists may have fewer training examples than others?",
       "options": [
-        "Because softmax ensures every class gets some share of the total score, and Internal Medicine is partially linked to Jane's second disease",
-        "Because the model randomly selects a second option",
-        "Because Internal Medicine is the fallback option",
-        "Because the LLM forced the selection of Internal Medicine as the second recommendation"
+        "By using the class_weight=\"balanced\" parameter to automatically adjust the weights for each class",
+        "By using a weighted loss function that penalizes mistakes on minority classes more heavily",
+        "By oversampling the minority classes to balance the training data",
+        "By ignoring class imbalance and relying on the model's ability to learn from the majority class"
       ],
       "answer": "1"
     },
@@ -484,13 +494,13 @@
       ],
       "answer": "3"
     },
-    {
-      "question": "How would removing 'visual_disturbances' affect Alice's predictions?",
+      {
+      "question": "Suppose you wanted to incorporate additional information about Jane Smith's medical history into the disease prediction model. What would be a suitable approach to integrate this new data?",
       "options": [
-        "Migraine probability would decrease",
-        "Heart attack would become top disease",
-        "Specialist recommended would switch to Cardiologist",
-        "No change"
+        "Add the medical history features as additional inputs to the Random Forest classifier",
+        "Use a separate model to predict disease probabilities based on medical history and then combine these predictions with the original model's output",
+        "Use transfer learning to adapt a pre-trained model that already incorporates medical history features",
+        "Ignore the medical history data, as it may not be relevant to the current symptoms"
       ],
       "answer": "1"
     },
@@ -593,6 +603,16 @@
         "LLM prefers Neurologist"
       ],
       "answer": "1"
+    },
+    {
+      "question": "Although Alice's predicted diseases (Migraine, Hypertension, Hypoglycemia) have similar confidence scores, the system strongly recommends a Neurologist (92.3%). What best explains this?",
+      "options": [
+        "The Neurologist is recommended because two of the predicted diseases are commonly associated with neurological care, increasing the combined weight for that specialist.",
+        "The Neurologist is always preferred when disease probabilities are close together.",
+        "The system averages disease and specialist probabilities directly, so similar inputs yield one high output.",
+        "The softmax function forces one label to be over 90% whenever three diseases are predicted."
+      ],
+      "answer": "1"
     }
   ],
   "EmilyDavis": [
@@ -607,12 +627,12 @@
     "answer": "1"
   },
   {
-    "question": "Why might Allergy still appear as a low-probability prediction (e.g., 4%) even when Malaria is highly likely?",
+    "question": "What is the purpose of using one-hot encoding for the top 3 predicted disease labels as input to the specialist recommendation model?",
     "options": [
-      "Because the softmax function assigns some probability mass to every class, reflecting partial overlap in symptoms",
-      "Because the LLM assigns scores manually",
-      "Because Random Forest always includes it",
-      "Because the model uses past case frequencies"
+      "To ensure that each disease label is treated as a separate, categorical feature",
+      "To reduce the dimensionality of the input data and prevent overfitting",
+      "To provide a sparse representation of the disease labels, which can improve model performance",
+      "To allow the model to capture non-linear relationships between diseases and specialists"
     ],
     "answer": "1"
   },
@@ -783,16 +803,6 @@
         "The model's default fallback",
         "That Heart Attack was highly likely",
         "The model ignored symptom severity"
-      ],
-      "answer": "1"
-    },
-    {
-      "question": "If the softmax probability of the second specialist increased from 5% to 20%, what could have changed?",
-      "options": [
-        "A third disease with strong weight for that specialist was added",
-        "The LLM intervened",
-        "Softmax was disabled",
-        "One-hot encoding was dropped"
       ],
       "answer": "1"
     },
