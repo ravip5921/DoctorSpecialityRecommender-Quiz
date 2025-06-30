@@ -26,6 +26,18 @@ def load_all_questions(patient_name):
             .select("*")\
             .eq("patient_name", patient_name)\
             .execute()
+
+            # Get 20 recent questions
+            # .order("id", desc=True)\
+            # .limit(20)\
+            # .execute()
+    
+            # Get 20 questions between fixed id limits
+            # .gte("id", 100)\
+            # .lte("id", 200)\
+            # .order("id", desc=True)\
+            # .limit(20)\
+            # .execute()
         question_list = []
 
         for row in response.data:
