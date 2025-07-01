@@ -25,12 +25,9 @@ def load_all_questions(patient_name):
         response = client.table("patient_questions")\
             .select("*")\
             .eq("patient_name", patient_name)\
+            .order("id", desc=True)\
+            .limit(20)\
             .execute()
-
-            # Get 20 recent questions
-            # .order("id", desc=True)\
-            # .limit(20)\
-            # .execute()
     
             # Get 20 questions between fixed id limits
             # .gte("id", 100)\
