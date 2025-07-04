@@ -61,6 +61,33 @@ def load_all_questions(patient_name):
     except Exception as e:
         st.error(f"Error loading questions from Supabase: {e}")
         return []
+    
+# --- Load Post Quiz Questions ---
+@st.cache_data(ttl=600)
+def load_post_quiz_questions():
+    try:
+        client = create_client(SUPABASE_URL, SUPABASE_KEY)
+        response = client.table("post_quiz_questions")\
+            .select("*")\
+            .order("id", desc=True)\
+            .execute()
+    
+        question_list = []
+
+        for row in response.data:
+            
+
+            question_list.append({
+                "id": row["id"],
+                "question": row["question"]
+            })
+
+        return question_list
+
+    except Exception as e:
+        st.error(f"Error loading questions from Supabase: {e}")
+        return []
+
 # --- Page Routing ---
 if "page" not in st.session_state:
     st.session_state.page = "home"
@@ -78,7 +105,6 @@ if st.session_state.page == "home":
         st.rerun()
 
 elif st.session_state.page == "quiz":
-    # --- Session Initialization ---
     # --- Session State Initialization ---
     if "shuffled_questions" not in st.session_state:
         all_qs = load_all_questions(st.session_state["patient_name"])
@@ -225,4 +251,91 @@ elif st.session_state.page == "quiz":
                 unsafe_allow_html=True
             )
 
-        st.stop()
+        if st.button("Go To Survey"):
+            st.session_state.page = "post_quiz"
+            st.rerun()
+    
+elif st.session_state.page == "post_quiz":
+    username = st.session_state.get("username", "anonymous")
+    st.markdown("### Post Quiz Survey")
+    st.markdown("---")
+
+    st.write(f"Hello, {username}")
+
+        
+    col1, col2 = st.columns([3, 1])
+    with col1:
+        st.write("#### 📝 Please complete the following survey")
+        st.markdown("*Rate each statement on a scale of 1 (Strongly Disagree) to 5 (Strongly Agree).*")
+    with col2:
+        st.markdown(
+            """
+            <div style='text-align:right; font-size: 0.9em;'>
+            <strong>Legend:</strong><br>
+            1 - Strongly Disagree<br>
+            2 - Disagree<br>
+            3 - Neutral<br>
+            4 - Agree<br>
+            5 - Strongly Agree
+            </div>
+            """,
+            unsafe_allow_html=True
+        )
+    st.write("---")
+
+    if "post_quiz_questions" not in st.session_state:        
+        post_quiz_questions = load_post_quiz_questions()
+
+        random.shuffle(post_quiz_questions)
+
+        st.session_state.post_quiz_questions = post_quiz_questions
+        st.session_state.post_quiz_answers = {q["id"]: None for q in post_quiz_questions}
+    
+    def post_quiz_on_option_change(qid):
+            st.session_state["post_quiz_answers"][qid] = st.session_state.get(f"q_{qid}", None)
+    
+    
+    opts = list(range(1,6))
+    for idx,q in enumerate (st.session_state.post_quiz_questions):
+
+        question = q["question"]
+        qid = q["id"]
+        st.radio(
+            label=f"Q{idx+1}. {question}",
+            options=opts,
+            index=None,
+            key=f"q_{qid}",
+            horizontal = True,
+            on_change = lambda qid=qid:post_quiz_on_option_change(qid)
+        )
+    
+    if st.button("Submit"):
+        unanswered = [qid for qid, ans in st.session_state.post_quiz_answers.items() if ans is None]
+
+        if unanswered:
+            st.error("Please answer all questions before submitting.")
+        else:
+            supabase = create_client(SUPABASE_URL, SUPABASE_KEY)
+            def write_post_quiz_submissions(username, questions, answers):
+                records =[]
+                for question in questions:
+                    q = question["question"]
+                    qid = question["id"]
+                    answer = answers[qid]
+
+                    records.append({
+                            "question_id":qid,
+                            "question":q,
+                            "username":username,
+                            "answer":answer,
+                            "patient_name": st.session_state["patient_name"]})
+                    
+                try:
+                    response = supabase.table("post_quiz_submissions").insert(records).execute()
+                    st.success("Post Quiz Survey submitted successfully.")
+                except Exception as e:
+                    st.error(f"Failed to save post quiz results: {e}")
+            
+            write_post_quiz_submissions(username, st.session_state.post_quiz_questions, st.session_state.post_quiz_answers)
+        
+    st.stop()

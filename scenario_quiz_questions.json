@@ -637,7 +637,7 @@
       "answer": "1"
     },
     {
-      "question": "Why might 'Allergy' still appear at 4.0% despite its low score?",
+      "question": "Why might 'Allergy' still appear in the predictions despite its low score (4.0%)?",
       "options": [
         "Because softmax assigns non-zero probability to all classes based on the model's output logits",
         "Because it may be manually included as part of a baseline condition set",

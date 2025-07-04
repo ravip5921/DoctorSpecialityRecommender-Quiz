@@ -50,3 +50,29 @@ for patient_name,questions in scenario_questions.items():
             count = count + 1
     
     print(f"\n-----Inserted {count} questions for {patient_name}------\n")
+
+
+
+with open("post_quiz_questions.json", "r") as f:
+    post_quiz_questions = json.load(f)
+
+
+# # Optional: Clear old records before inserting
+supabase.table("post_quiz_questions").delete().neq("question", "").execute()
+
+# --- Upload to Supabase ---
+for set_num,questions in post_quiz_questions.items():
+    count = 0
+    for q in questions:
+        question = q["question"]
+        insert_data = {
+            "question":question
+        }
+
+        response = supabase.table("post_quiz_questions").insert(insert_data).execute()
+
+        if response:
+            print(f"Inserted: {question}")
+            count = count + 1
+    
+    print(f"\n-----Inserted {count} questions for {set_num}------\n")

@@ -1,0 +1,8 @@
+{
+    "set1":[
+        {"question":"I can identify cases where the AI might be making a mistake."},
+        {"question":"The AI system's explanation helps me judge how trustworthy its prediction is."},
+        {"question":"The AI's explanation helps me understand what actions I should take next."},
+        {"question":"I know how to adjust my decisions based on what the AI explains."}
+    ]
+}
