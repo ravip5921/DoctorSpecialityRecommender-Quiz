@@ -261,26 +261,53 @@ elif st.session_state.page == "post_quiz":
     st.markdown("---")
 
     st.write(f"Hello, {username}")
+    opts = list(range(1,6))
+    likert_labels = {
+        1: "Strongly Disagree",
+        2: "Disagree",
+        3: "Somewhat Disagree",
+        4: "Neutral",
+        5: "Somewhat Agree",
+        6: "Agree",
+        7: "Strongly Agree"
+    }
+    if opts[-1] == 5:
+        likert_labels = {
+            1: "Strongly Disagree",
+            2: "Disagree",
+            3: "Neutral",
+            4: "Agree",
+            5: "Strongly Agree"
+        }
 
         
-    col1, col2 = st.columns([3, 1])
+    col1, col2 = st.columns([3, 2])
     with col1:
         st.write("#### 📝 Please complete the following survey")
-        st.markdown("*Rate each statement on a scale of 1 (Strongly Disagree) to 5 (Strongly Agree).*")
+        st.markdown(f"*Rate each statement on a scale of {opts[0]} (Strongly Disagree) to {opts[-1]} (Strongly Agree).*")
     with col2:
-        st.markdown(
-            """
-            <div style='text-align:right; font-size: 0.9em;'>
-            <strong>Legend:</strong><br>
-            1 - Strongly Disagree<br>
-            2 - Disagree<br>
-            3 - Neutral<br>
-            4 - Agree<br>
-            5 - Strongly Agree
-            </div>
-            """,
-            unsafe_allow_html=True
+        table_rows = "".join(
+            f"<tr><td style='padding: 4px 12px; text-align: center;'>{val}</td><td style='padding: 4px 12px;'>{label}</td></tr>"
+            for val, label in likert_labels.items()
         )
+
+        legend_html = f"""
+        <div style='text-align:right; font-size: 0.9em;'>
+        <strong>Legend:</strong><br><br>
+        <table style='border-collapse: collapse; margin-left: auto;'>
+            <thead>
+                <tr>
+                    <th style='text-align: center; padding: 4px 12px;'>Value</th>
+                    <th style='text-align: left; padding: 4px 12px;'>Label</th>
+                </tr>
+            </thead>
+            <tbody>
+                {table_rows}
+            </tbody>
+        </table>
+        </div>
+        """
+        st.markdown(legend_html, unsafe_allow_html=True)
     st.write("---")
 
     if "post_quiz_questions" not in st.session_state:        
@@ -295,7 +322,6 @@ elif st.session_state.page == "post_quiz":
             st.session_state["post_quiz_answers"][qid] = st.session_state.get(f"q_{qid}", None)
     
     
-    opts = list(range(1,6))
     for idx,q in enumerate (st.session_state.post_quiz_questions):
 
         question = q["question"]
