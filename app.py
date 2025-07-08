@@ -261,7 +261,7 @@ elif st.session_state.page == "post_quiz":
     st.markdown("---")
 
     st.write(f"Hello, {username}")
-    opts = list(range(1,6))
+    opts = list(range(1,8))
     likert_labels = {
         1: "Strongly Disagree",
         2: "Disagree",
