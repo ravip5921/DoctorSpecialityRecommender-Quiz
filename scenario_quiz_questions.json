@@ -4,69 +4,69 @@
       "question": "Why is 'red spots over body' a strong indicator for diseases like Chicken Pox and Acne in Michael's case?",
       "options": [
           "Because the symptom frequently co-occurs with diseases like Chicken Pox and Acne in the training data, leading the model to link them",
-          "Because Random Forest directly assigns a specialist whenever it detects this symptom",
+          "Because the system directly assigns any skin disease at random whenever it detects this symptom",
           "Because 'red spots over body' is a unique indicator for Dermatologists, which the system always associates",
           "Because the model was trained only on skin diseases, making it less capable of predicting other conditions"
       ],
       "answer": "1"
     },
     {
-      "question": "Why is Chicken pox more likely than Acne or Hepatitis C for Michael?",
+      "question": "Why does the system say Chicken pox is more likely than Acne or Hepatitis C for Michael?",
       "options": [
         "Because symptoms like rash and red spots match Chicken pox cases in the training data",
-        "Because Chicken pox was seen before Acne or Hepatitis C in the training data ",
+        "Because the system saw Chicken pox earlier than the other diseases during training",
         "Because Acne was excluded during preprocessing",
         "Because Chicken pox appears first in a large number of training instances"
       ],
       "answer": "1"
     },
     {
-      "question": "Why does the model show Acne as the second prediction even though its probability is much lower than Chicken pox?",
+      "question": "Why does the system list Acne as the second most likely disease even though its probability is much lower than Chicken pox?",
       "options": [
           "Because it's still the second most likely diagnosis based on Michael's symptoms",
-          "Because the output ranking reflects relative order, not absolute probability differences",
-          "Because the model includes common conditions to maintain diagnostic coverage",
-          "Because low-probability diseases occasionally appear if other options are less supported"
+          "Because the output ranking reflects relative order, even if the scores are very different",
+          "Because the system includes common conditions to make sure they are considered",
+          "Because low-probability diseases occasionally appear if no stronger matches exist"
       ],
       "answer": "1"
     },
     {
-      "question": "Why might Hepatitis C receive a low but nonzero probability in Michael's output?",
+      "question": "Why does the system still show some chance (a low probability) for Hepatitis C in Michael's results?",
       "options": [
           "Because symptoms like fatigue and lethargy partially match cases labeled as Hepatitis C in training",
-          "Because the model assigns small weights to conditions with marginal symptom overlap",
-          "Because liver-related diseases tend to co-activate when non-specific symptoms are present",
-          "Because softmax distributes some probability mass even when the match is weak"
+          "Because the system assigns small probabilities to diseases with marginal symptom overlap",
+          "Because liver-related diseases tend to show up when symptoms are vague",
+          "Because the system always spreads some chance across diseases (softmax distributes probability), even for weak matches."
       ],
       "answer": "1"
     },
     {
-      "question": "What binary vector entry corresponds to the symptom 'fatigue'?",
+      "question": "In the system's input, how is the symptom 'fatigue' represented?",
       "options": [
         "1 if fatigue is present, 0 if absent",
-        "The aggregated importance score of fatigue across trees",
+        "The overall importance score of fatigue across trees",
         "The probability of fatigue predicted by softmax",
         "A continuous measurement from clinical lab results"
       ],
       "answer": "1"
     },
     {
-      "question": "Why does the model not recommend a Cardiologist for Michael despite reporting fatigue?",
+      "question": "Why does the system not list a Cardiologistas one of the recommended specialists even though Michael reported fatigue?",
       "options": [
-          "Because model considers all input symptoms to provide output and fatigue overlaps with many non-cardiac conditions",
-          "Because fatigue may be deprioritized by the LLM explanation module",
-          "Because Cardiologists are excluded in non-urgent cases like 'fatigue' by default",
-          "Because Dermatologist becomes the fallback when skin symptoms are included and 'fatigue' is not relevant"
+          "Because the system looks at all symptoms, and fatigue overlaps with many non-cardiac conditions",
+          "Because fatigue may be ignored by the LLM explanation module",
+          "Because Cardiologists are excluded when 'fatigue' is mild",
+          "Because skin symptoms dominate the system results, and 'fatigue' is not relevant"
       ],
       "answer": "1"
     },
     {
-      "question": "Why do the symptoms 'red_spots_over_body' and 'skin_rash' increase the probability of Chicken pox?",
+      "question": "Why do the symptoms 'red_spots_over_body' and 'skin_rash' increase the probability of Chicken pox in the system's result?",
       "options": [
-        "Because they appear in many leaf nodes associated with Chicken pox during training",
-        "Because the model applies a postprocessing weight to skin-related symptoms for certain diseases",
-        "Because feature normalization scales skin indicators higher than other inputs",
-        "Because symptom co-occurrence statistics bias predictions toward common dermatological conditions"
+        "Because they appear in  decision trees that vote for Chicken pox",
+        "Because the system applies an extra weight to skin-related symptoms",
+        "Because skin indicators are scaled higher than other inputs",
+        "Because these symptoms tend to bias predictions toward all skin diseases"
       ],
       "answer": "1"
     },
@@ -75,62 +75,62 @@
 
 
     {
-      "question": "When the LLM explanation claims \"elevated CRP levels indicate a stronger diagnosis,\" what follow-up question would confirm whether CRP was actually used as an input feature?",
+      "question": "If the LLM explanation claims \"elevated CRP levels indicate a stronger diagnosis,\" what follow-up question should you ask to check if the system actually used CRP in its analysis?",
       "options": [
         "Did the disease model include C-reactive protein (CRP) measurements among its input features?",
         "How many decision trees in the forest calculated CRP thresholds for splitting?",
-        "Can you show how the symptom vector was constructed without lab values?",
-        "What postprocessing step applies lab-based adjustments to the predictions?"
+        "Can you show how the symptom list was constructed without lab values?",
+        "What step adjusts the predictions based on lab results?"
       ],
       "answer": "1"
     },
     {
       "question": "What is the primary reason for using a Random Forest classifier as the disease prediction model in this system?",
       "options": [
-        "To take advantage of the ensemble method's ability to reduce variance and improve overall performance",
-        "To manage high-dimensional symptom inputs with better generalization across diseases",
-        "To simplify interpretation by restricting decisions to a single tree per prediction",
-        "To embed expert-driven symptom-to-disease rules directly into each decision tree"
+        "To take advantage of the ensemble method's ability to reduce errors and make more reliable predictions",
+        "To handle symptoms in chronological order and prioritize the most recently reported ones",
+        "To reduce computation time by limiting the number of decisions compared to other models",
+        "To ensure that only a single symptom determines the final disease prediction for easier interpretation"
       ],
       "answer": "1"
     },
     {
-      "question": "Why does the Random Forest average over 200 trees instead of using a single tree?",
+      "question": "Why does the Random Forest combine the results of 200 trees instead of just one?",
       "options": [
-          "It reduces overfitting and produces more stable predictions",
-          "It lowers computational cost by parallelizing fewer operations",
-          "Using 100s of trees avoids using Gini impurity in node splitting",
-          "A large number of trees generate continuous symptom importance scores"
+          "Because it reduces overfitting and produces more stable results",
+          "Because it is faster than using fewer trees by parallelizing operations",
+          "Because using 100s of trees avoids using Gini impurity, making the overall process simpler",
+          "Because a large number of trees generate continuous symptom scores"
       ],
       "answer": "1"
     },
     {
-      "question": "Why might the second-ranked specialist still receive a nonzero probability?",
+      "question": "Why does the system still show a small probability for the second-ranked specialist?",
       "options": [
-        "Because softmax assigns some probability mass to every specialist class based on their logits",
+        "Because the model assigns some chance to every specialist",
         "Because the interface is designed to always display two specialists",
-        "Because Logistic Regression reinitializes probabilities below a threshold",
+        "Because Logistic Regression resets probabilities below a threshold",
         "Because Random Forest re-votes for specialists after disease prediction"
       ],
       "answer": "1"
     },
     {
-      "question": "How can a multiclass classifier (e.g., multinomial logistic regression) be used in a specialist recommender system?",
+      "question": "How can a multiclass classifier (e.g., multinomial logistic regression) be used to recommend a specialist?",
       "options": [
-        "By encoding the top disease predictions as categorical inputs and outputting a probability distribution over specialists",
-        "By clustering symptom embeddings and assigning specialists based on nearest neighbors",
-        "By directly mapping raw symptom vectors to specialist categories without intermediate disease labels",
-        "By weighting specialist scores using continuous lab measurements during training"
+        "By taking the top disease predictions and outputting a probability for specialists",
+        "By clustering symptom and matching nearest specialists",
+        "By mapping symptom directly to specialist without intermediate disease labels",
+        "By using continuous lab measurements to adjust specialist scores during training"
       ],
       "answer": "1"
     },
     {
-      "question": "Why does the specialist recommender use one-hot encoded disease labels rather than raw symptoms?",
+      "question": "Why does the system use a one-hot representation of the top 3 diseases (instead of using the symptoms directly) to recommend a specialist?",
       "options": [
-        "Because it ensures that each disease is represented distinctly and mapped correctly to specialists in the logistic regression model",
-        "Because raw symptoms tend to have high dimensionality and introduce noise, reducing specialist prediction accuracy",
-        "Because one-hot encoded diseases align with how the specialist model was trained and match its expected input format",
-        "Because encoding diseases in one-hot vectors minimizes the risk of feature collinearity and maintains interpretability"
+        "Because it ensures that each disease is clearly represented and mapped properly to specialists",
+        "Because it reduces the number of symptoms considered and ignores less important ones completely",
+        "Because it allows the system to use lab test results alongside symptoms for providng the recommendations",
+        "Because it automatically ranks symptoms by severity before choosing a specialist"
       ],
       "answer": "1"
     },
@@ -139,52 +139,52 @@
 
 
     {
-      "question": "Could Michael's red spots be caused by something other than Chicken pox? Which follow-up would probe this?",
+      "question": "Could Michael's red spots be caused by something other than Chicken pox? Which follow-up would would help you explore this possibility?",
       "options": [
         "Could the rash be due to an allergic reaction rather than Chicken pox?",
-        "Does the model apply uniform weights to all skin-related features, causing rash to trigger Chicken pox predictions?",
-        "Could a misalignment in one-hot encoding for 'red_spots_over_body' be inflating the Chicken pox score?",
-        "Is the symptom co-occurrence bias matrix skewed toward Chicken pox for any rash-like inputs?"
+        "Does the model give equal weight to all skin symptoms, causing rash to trigger Chicken pox predictions?",
+        "Could a mistake in the disease labels be inflating the Chicken pox score?",
+        "Is the symptom co-occurrence matrix biased toward Chicken pox for any rash-like inputs?"
       ],
       "answer": "1"
     },
     {
-      "question": "After Michael's scenario, you notice 'Acne' at 10.5%. What could a user ask to understand why Acne scored lower than Hepatitis C?",
+      "question": "After Michael's scenario, you notice 'Acne' at 10.5%. What question could help you understand why Acne scored lower than Hepatitis C?",
       "options": [
-        "Which decision tree splits favored Hepatitis C features over Acne features?",
-        "How many training epochs were used when fitting the disease model?",
-        "Why are low-probability diseases occasionally truncated in the output?",
+        "Which decision tree paths favored Hepatitis C over Acne?",
+        "Could removing a symptom like fatigue increase Acne's score instead?",
+        "Did the system prioritize more severe diseases when symptoms overlapped?",
         "Which lab test values influenced the Acne prediction score?"
       ],
       "answer": "1"
     },
     {
-      "question": "Why would removing 'skin_rash' from Michael's symptoms affect the chance of a Dermatologist being recommended?",
+      "question": "Why would removing 'skin_rash' from Michael's symptoms affect the chance that the system recommends a Dermatologist?",
       "options": [
-          "Because it could weaken the model's confidence in skin diseases, which are mapped to Dermatologists",
-          "Because it causes the softmax to ignore skin-related features",
-          "Because removing a key symptom causes significant shifts in feature distributions that the model cannot properly adjust for",
-          "Because missing symptoms can affect decision tree splits that contribute to specialist predictions"
+          "Because removing it weakens the system's confidence in skin diseases",
+          "Because it causes the softmax to ignore skin-related symptoms",
+          "Because removing a key symptom causes significant shifts in symptom distributions that the model cannot properly adjust for",
+          "Because missing symptoms can affect decision tree splits that lead to specialist predictions"
       ],
       "answer": "1"
     },
     {
-      "question": "Why might adding 'itching' to Michael's symptoms further increase Chicken pox probability?",
+      "question": "Why might adding 'itching' as a symptom make Chicken Pox even more likely?",
       "options": [
-          "Because itching often co-occurs with Chicken pox in training data and reinforces its path in decision trees",
-          "Because softmax favors longer symptom vectors and adding any symptoms will increase all probability scores",
-          "Because itching encodes learned probability weights",
-          "Because adding itching reduces relevance of other specialists like Hepatologist"
+          "Because itching often appeared with Chicken pox in training data",
+          "Because adding symptoms will always increase all probability scores",
+          "Because itching has built-in probability weights",
+          "Because adding itching reduces scores of other specialists"
       ],
       "answer": "1"
     },
     {
-      "question": "If Michael's actual condition were Lupus but it only scored 5%, what does that suggest about the classifier?",
+      "question": "If Michael's actual condition was Lupus but the system only gave it a 5% chance, what does that suggest about the system?",
       "options": [
         "It may be misclassifying Lupus symptoms as resembling Chicken pox",
         "It implies Lupus is grouped under Hepatitis C by the model",
-        "It indicates the model overfits to more common skin conditions",
-        "It shows the specialist module is overriding disease scores"
+        "It indicates the system focuses too much on common diseases",
+        "It shows the specialist module overrides disease scores"
       ],
       "answer": "1"
     },
@@ -199,12 +199,12 @@
       "answer": "1"
     },
     {
-      "question": "How would removing 'red_spots_over_body' from Michael's inputs affect the disease probabilities?",
+      "question": "How would removing 'red_spots_over_body' from Michael's symptoms change the disease predictions?",
       "options": [
         "Chicken pox probability would likely decrease due to removal of a key skin-related indicator",
-        "All predicted disease probabilities would incorrectly redistribute and sum to more than 100 percent",
+        "All predicted disease probabilities would incorrectly redistribute and add up to more than 100%",
         "The probability for Dermatologist recommendation would remain largely unchanged despite the missing symptom",
-        "The feature vector entry for 'red_spots_over_body' would default to an arbitrary nonzero value"
+        "The system would set a random value for the missing symptom"
       ],
       "answer": "1"
     }
