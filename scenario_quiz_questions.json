@@ -211,32 +211,32 @@
   ],
   "JaneSmith": [
     {
-      "question": "Why is 'diarrhoea' a strong indicator for Gastroenteritis in the Random Forest?",
+      "question": "Why does the system think 'diarrhoea' strongly suggests the need to see a Gastroenteritis?",
       "options": [
-        "Because it frequently co-occurs with Gastroenteritis cases in the training data and influences tree splits",
-        "Because it boosts the disease probability through softmax amplification",
-        "Because the system is programmed to assign digestive diseases when gastrointestinal symptoms are present",
-        "Because diarrhoea overrides other symptoms in the feature vector during preprocessing"
+        "Because it often appeared together with Gastroenteritis cases in the examples the model learned from, and it strongly influences its decisions",
+        "Because it boosts the disease score by amplifying the probability through the final calculation",
+        "Because the system is designed to recommend digestive diseases whenever diarrhoea is present",
+        "Because diarrhoea masks all other symptoms in the model's input before prediction"
       ],
       "answer": "1"
     },
     {
-      "question": "Why does the model give Gastroenterologist such a high confidence score in Jane's case?",
+      "question": "Why does the model strongly recommend seeing a Gastroenterologist for Jane?",
       "options": [
-        "Because Gastroenteritis was predicted as the top disease and it's strongly associated with that specialist in training data",
-        "Because it is the default recommendation for digestive symptoms",
-        "Because vomiting is always mapped to Gastroenterologist",
-        "Because softmax boosts the first option"
+        "Because Gastroenteritis was predicted as the top diseasee, and that disease is closely linked to a Gastroenterologist",
+        "Because the model always recommends a Gastroenterologist when stomach problems are reported",
+        "Because vomiting alone always triggers the Gastroenterologist recommendation",
+        "Because the model gives the first specialist a boost without checking others"
       ],
       "answer": "1"
     },
     {
-      "question": "Why might the model choose Malaria as a lower-ranked prediction despite a weak symptom match?",
+      "question": "Why does the model still include Malaria even though Jane's symptoms don't match it well?",
       "options": [
-        "Because it shares partial overlap (e.g., vomiting) with Jane's input, so it gets a small score from a few trees",
+        "Because it shares some symptoms (like vomiting) with Jane's input, so a few of the decision trees gave it a small score",
         "Because the specialist prediction may influence disease probabilities during postprocessing",
-        "Because Malaria appears frequently in similar clinical cases within the training data",
-        "Because symptoms like diarrhoea are loosely associated with Malaria in broader diagnostic patterns"
+        "Because Malaria appeared frequently in similar clinical cases the model learned from",
+        "Because symptoms like diarrhoea can sometimes be loosely associated with Malaria in the data"
       ],
       "answer": "1"
     },
@@ -245,8 +245,8 @@
       "options": [
         "It suggests a low likelihood but not one that can be entirely ruled out",
         "It indicates that Malaria is the most probable diagnosis based on the symptoms",
-        "It reflects that the model likely misinterpreted the symptom inputs",
-        "It means the input feature vector may not have been processed correctly"
+        "It reflects that the model likely misinterpreted the symptom",
+        "It means the symptom inputs were not properly handled"
       ],
       "answer": "1"
     },
@@ -256,27 +256,27 @@
         "None - all binary symptom features are processed by the model",
         "Nausea - because it's subjective",
         "Abdominal pain - it is prefiltered",
-        "Vomiting - it is not encoded numerically"
+        "Vomiting - it is not encoded properly"
       ],
       "answer": "1"
     },
     {
-      "question": "After Jane sees Chronic cholestasis at 22.0%, which question probes why it wasn't at the topmost?",
+      "question": "After Jane sees Chronic cholestasis at 22.0%, which question could explain why it wasn't the disease?",
       "options": [
-        "Which symptom led to Gastroenteritis being favored over Chronic cholestasis?",
-        "Why is Chronic cholestasis assigned a fixed upper limit in the model?",
-        "Does the model penalize liver diseases like cholestasis by default?",
+        "Which symptom led the system to choose Gastroenteritis over Chronic cholestasis?",
+        "Why is Chronic cholestasis capped at a certain score?",
+        "Does the model dislike liver diseases like cholestasis by default?",
         "Was cholestasis probability reduced due to overlap with unrelated symptoms?"
       ],
       "answer": "1"
     },
     {
-      "question": "Why might 'Malaria' still appear in the predictions despite its low score (10.5%)?",
+      "question": "Why does the model still list Malaria even though it's very unlikely?",
       "options": [
-        "Because softmax assigns non-zero probability to all classes based on the model's output logits",
+        "Because the model gives a small chance to all diseases, even less likely ones",
         "Because it may be manually included as part of a baseline condition set",
-        "Because the UI logic ensures a minimum number of conditions are shown and adds labels at random",
-        "Because the model resets certain thresholds during impurity-based splits"
+        "Because the user interface adds random diseases to fill the list of three diseases",
+        "Because the model resets some scores during prediction"
       ],
       "answer": "1"
     },
@@ -285,61 +285,61 @@
 
 
     {
-      "question": "If the LLM says \"high blood sugar values suggest systemic inflammation,\" which question would reveal that the Random Forest never ingested blood sugar data?",
+      "question": "If the LLM says \"high blood sugar values suggest systemic inflammation,\" which question would check if the model actually used blood sugar data?",
       "options": [
-        "Were blood sugar measurements actually part of the Random Forest's training features?",
-        "What was the model's accuracy on samples with elevated blood sugar values?",
-        "Why does vomiting correlate with blood sugar in this explanation?",
-        "How many trees in the forest reference blood sugar in their split logic?"
+        "Were blood sugar measurements actually part of the training features?",
+        "How accurate is the model when the patient states that blood sugar is high?",
+        "Why does vomiting link to blood sugar in this explanation?",
+        "How many trees in the random forest model split on blood sugar values?"
       ],
       "answer": "1"
     },
     {
-      "question": "Explain in simple terms why averaging tree outputs reduces overfitting.",
+      "question": "Explain in simple terms why averaging tree outputs reduces overfitting",
       "options": [
-        "It smooths out individual tree errors by combining many independent decisions",
-        "It always selects the most frequently predicted class from a single tree",
-        "It increases the number of splits per tree to make them more accurate",
-        "It avoids softmax by distributing votes across all possible classes"
+        "Because it smooths out individual tree errors by combining many independent decisions",
+        "Because it always selects the most common answer from one tree",
+        "Because it increases the number of splits per tree to make them more accurate",
+        "Because it avoids softmax by distributing votes across all possible classes"
       ],
       "answer": "1"
     },
     {
-      "question": "Why use one-hot encoding of disease labels before the Logistic Regression specialist model instead of reusing raw symptoms?",
+      "question": "Why does the specialist model use the predicted diseases instead of symptoms?",
       "options": [
-        "Because the specialist model is trained only on disease-category features, not symptom vectors",
-        "Because raw symptom inputs introduce noise that harms logistic regression accuracy",
-        "Because one-hot coding simplifies implementation in the feature pipeline",
-        "Because tree-based splitting cannot process continuous symptom inputs"
+        "Because the specialist model is trained only to use diseases, not symptoms",
+        "Because symptom introduce noise that harms the specialist model's accuracy",
+        "Because it is easier to build the system this way",
+        "Because tree-based splitting cannot process symptom as inputs"
       ],
       "answer": "1"
     },
     {
-      "question": "Why does the model not show just one disease, even when the top prediction is much higher than the rest?",
+      "question": "Why does the model show more than one disease, even when the top prediction score is much higher than the rest?",
       "options": [
         "To expose uncertainty and offer users alternative plausible diagnoses alongside the top choice",
-        "To maintain alignment with the specialist recommendation module's expected input format",
+        "To maintain alignment with the specialist recommendation module's expected three disease as input",
         "To comply with interface guidelines that display multiple options for informed decision-making",
-        "To ensure audit logs capture a spectrum of model outputs for each case"
+        "To ensure the system keeps record of all outputs for each case"
       ],
       "answer": "1"
     },
     {
-      "question": "Why does the system use symptoms like nausea and diarrhoea instead of asking for lab values?",
+      "question": "Why does the system use symptoms like nausea and diarrhoea instead of asking for lab tests?",
       "options": [
         "Because it was trained only on symptom checklists and not lab data",
         "Because lab values are harder to visualize",
         "Because symptoms don't need softmax normalization",
-        "Because nausea is always more accurate"
+        "Because reporting symptoms lead to more accurate results"
       ],
       "answer": "1"
     },
     {
-      "question": "Why is it helpful for a user to see Chronic cholestasis listed even though it's not the top diagnosis?",
+      "question": "Why is it helpful for a user to see Chronic cholestasis and Malaria listed even though they are not the top diagnosis?",
       "options": [
-        "Because it reveals alternative diagnostic paths, supporting more informed decision-making",
-        "Because the UI requires three diseases to maintain consistent formatting",
-        "Because seeing rarer conditions improves the softmax calibration",
+        "Because it helps users consider other possibilities too",
+        "Because the system requires three diseases to maintain consistent layout",
+        "Because seeing rarer conditions improves the calibration",
         "Because listing extra diagnoses triggers deeper LLM explanations"
       ],
       "answer": "1"
@@ -352,26 +352,26 @@
       "options": [
         "Because decision tree splits depend on specific symptom combinations, so fewer inputs alter the branching logic",
         "Because reducing the number of symptoms automatically increases the prediction confidence",
-        "Because with fewer inputs the model defaults to alphabetical ordering of diseases for prediction",
-        "Because softmax normalization treats two-symptom vectors differently than four-symptom ones"
+        "Because with fewer inputs the model sorts diseases alphabetically",
+        "Because softmax normalization treats input with two symptoms differently than four symptom"
       ],
       "answer": "1"
     },
     {
-      "question": "Could Jane's diarrhoea be caused by something other than Gastroenteritis? What would you ask?",
+      "question": "Could Jane's diarrhoea be caused by something other than Gastroenteritis? What would you ask to clarify this?",
       "options": [
         "Could loose stools indicate IBS or a food intolerance rather than Gastroenteritis?",
         "Could the model's learning rate affect diarrhoea predictions?",
-        "Could tree depth settings bias the model toward GI conditions?",
-        "Could softmax thresholding suppress alternate GI diagnoses?"
+        "Could tree depth bias the model toward stomach-related conditions?",
+        "Could softmax hide other stomach-related diagnoses?"
       ],
       "answer": "1"
     },
     {
-      "question": "How would removing 'vomiting' from Jane's input likely affect the probabilities?",
+      "question": "What would happen to the system's prediction if 'vomiting' is not reported to the system in Jane's case?",
       "options": [
-        "Gastroenteritis probability would decrease",
-        "Malaria probability would increase above 50%",
+        "The chance of Gastroenteritis being recommended would drop",
+        "The model would become more certain about the specialist recommendation",
         "Specialist recommendation would switch to Cardiologist",
         "There would be no noticeable effect on the predictions"
       ],
@@ -380,10 +380,10 @@
     {
       "question": "If Gastroenteritis and Heartburn share symptoms, what could make the model prefer one over the other?",
       "options": [
-        "Distribution of symptoms and decision path frequency in training data",
-        "Random fluctuations in symptom encoding during runtime",
-        "Minor shifts in input vector due to data input sequence",
-        "Language model token prioritization of similar symptom clusters"
+        "Because the model relies on patterns it learned from past examples",
+        "Because of random symptom changes during prediction",
+        "Because of the order symptoms were entered",
+        "Because the language model prefers certain words"
       ],
       "answer": "1"
     },
@@ -392,8 +392,8 @@
       "options": [
         "It suggests the model confuses IBS symptoms with Gastroenteritis",
         "It implies IBS is captured under Chronic cholestasis predictions",
-        "It indicates the specialist classifier demoted IBS scores",
-        "It reflects perfect generalization across GI conditions"
+        "It indicates the specialist classifier lowered IBS scores",
+        "It reflects perfect generalization for stomach-related conditions"
       ],
       "answer": "1"
     },
@@ -408,11 +408,11 @@
       "answer": "3"
     },
     {
-      "question": "What would happen if only two disease labels were passed to the specialist classifier?",
+      "question": "What would happen if only two disease labels are sent to the specialist classifier?",
       "options": [
-        "It would still generate a probability distribution over only the provided classes with reduced context",
-        "The specialist classifier would produce an error because the input vector dimensions are insufficient",
-        "It would replicate one of the provided disease labels to populate the missing vector positions",
+        "It would still predict specialists but with less information",
+        "The specialist classifier would produce an error because the input size is wrong",
+        "It duplicates a disease to fill the list of input diseases to the classifier",
         "It would return only a single specialist recommendation due to incomplete label inputs"
       ],
       "answer": "1"
@@ -420,72 +420,72 @@
   ],
   "AliceJohnson": [
     {
-      "question": "Why might the Random Forest associate 'slurred_speech' more with neurological issues than metabolic ones?",
+      "question": "Why does the system connect 'slurred speech' more to neurological problems than to metabolic problems?",
       "options": [
-        "Because it is associated with neurological conditions in the training data and is used in tree splits favoring those labels",
-        "Because slurred speech is given a higher weight during feature normalization",
-        "Because the system uses softmax to increase scores for neurologically relevant symptoms",
-        "Because it is hardcoded to trigger Neurologist recommendations"
+        "Because the system learned from past examples that slurred speech is more common in neurological diseases",
+        "Because slurred speech is automatically given more weight in the calculations",
+        "Because the system boosts scores for brain-related symptoms using a special function whenever there are neurological symptoms",
+        "Because slurred speech is hardcoded to always lead to a Neurologist"
       ],
       "answer": "1"
     },
     {
-      "question": "Why does visual disturbance increase the likelihood of Migraine in the Random Forest model?",
+      "question": "Why does reporting vision problems make the system more likely to predict Migraine?",
       "options": [
-        "Because visual issues frequently appeared in Migraine cases during training",
-        "Because visual symptoms activate the model's softmax function",
-        "Because dizziness and vision problems are usually grouped together",
-        "Because Logistic Regression boosts symptoms related to the brain"
+        "Because vision problems often appeared with Migraine in the examples the system learned from",
+        "Because vision problems trigger an extra scoring step in the system",
+        "Because dizziness and vision problems are always grouped together in the model",
+        "Because the system gives extra points to any brain-related symptoms"
       ],
       "answer": "1"
     },
     {
-      "question": "A user sees Hypertension ranked 2nd and wonders if it's less relevant than Migraine. What question helps them understand this?",
+      "question": "If Hypertension is ranked lower than Migraine, what question would you ask to understand why it is so?",
       "options": [
         "Which symptoms specifically triggered Hypertension in the random trees used for classification?",
-        "What was the overall training accuracy for Hypertension compared to other diseases?",
-        "How many features contributed to Hypertension's softmax probability?",
-        "Was Hypertension's probability adjusted during normalization of the output?"
+        "How accurate was the system for Hypertension during its training?",
+        "How many symptoms indirectly contributed to Hypertension's probability score?",
+        "Did the system adjust Hypertension's score after its first calculation?"
       ],
       "answer": "1"
     },
     {
-      "question": "Why does the system suggest Neurological conditions for Alice rather than a Cardiac or skin conditions?",
+      "question": "Why does the system suggest Neurological diseases for Alice rather than a Cardiac or skin diseases?",
       "options": [
-        "Because her symptoms are strongly associated with neurological conditions in the training data",
-        "Because the system prefers Neurology when multiple vague symptoms are present",
+        "Because her symptoms are strongly associated with neurological conditions in the examples the system learned from",
+        "Because the system prefers neurological diseases when multiple vague symptoms are present assuming it to be a complex situation",
         "Because Neurological predictions are more likely when headache is included",
-        "Because slurred speech does not contribute to cardiac or dermatological diagnoses"
+        "Because symptoms like slurred speech does not help identify heart or skin problems"
       ],
       "answer": "1"
     },
     {
-      "question": "Why might the model assign Hypoglycemia a lower probability even though dizziness is a symptom?",
+      "question": "Why does the system give Hypoglycemia a lower score even though dizziness is one of Alice's symptoms?",
       "options": [
-        "Because dizziness overlaps with Migraine and Hypertension, and the model's trees weigh those conditions more heavily when combined with visual disturbances",
-        "Because the feature-engineering pipeline downweights common symptoms like dizziness to reduce noise in decision tree splits",
-        "Because the softmax layer inherently distributes probability across all classes rather than excluding low-scoring conditions entirely",
-        "Because the symptom preprocessing step may normalize inputs unevenly, reducing the relative influence of dizziness on final scores"
+        "Because dizziness is also common in Migraine and Hypertension, and the system leans toward those when combined with vision problems",
+        "Because the system reduces the weight of common symptoms like dizziness to reduce confusion in decision tree splits",
+        "Because the system spreads some score to all diseases even if they're not likely, rather than excluding low-scoring conditions entirely",
+        "Because the symptom preprocessing step may adjust symptoms unevenly, reducing the relative influence of dizziness on final scores"
       ],
       "answer": "1"
     },
     {
-      "question": "Why might Alice's symptoms be misinterpreted as Hypoglycemia rather than stroke?",
+      "question": "Why might Alice's symptoms be misinterpreted by the system as Hypoglycemia rather than stroke?",
       "options": [
-        "Because both conditions share those symptoms and the model saw more Hypoglycemia examples during training",
-        "Because the Random Forest arbitrarily ignores neurological features like dizziness",
-        "Because the Logistic Regression specialist layer overrides Random Forest outputs",
-        "Because the LLM explanation layer biases the diagnosis toward metabolic causes"
+        "Because both conditions share those symptoms and the system saw more examples of Hypoglycemia during training",
+        "Because the disease prediction component of the system ignored ignores brain-related symptoms like dizziness",
+        "Because the system is designed to prioritize less severe conditions to avoid causing unnecessary alarm",
+        "Because the LLM explanation tool pushes the result toward metabolic causes and thus changes disease predictions"
       ],
       "answer": "1"
     },
     {
-      "question": "Alice is told Neurologist (92%) and Endocrinologist (4%) are top picks. What explains the specialist split?",
+      "question": "The system picks Neurologist (92%) and Endocrinologist (4%) as the top specialist picks for Alice's case. What explains the specialist split?",
       "options": [
-        "Because Migraine's high disease probability strongly weights the Neurologist class in the logistic regression",
-        "Because the system defaults to Endocrinology as a secondary specialist when probabilities are close",
-        "Because class imbalance and regularization push softmax to favor more common specialties",
-        "Because the LLM explanation component post-adjusts scores for readability rather than model logic"
+        "Because Migraine has a high score, and that pushes the Neurologist score up in the second part of the system",
+        "Because the system defaults to Endocrinology as a secondary specialist when scores for first specialist recommendation is more than 90%",
+        "Because the system's balancing mechanism favors more common specialties",
+        "Because the explanation tool redistributes final scores to simplify the output for users"
       ],
       "answer": "1"
     },
@@ -494,62 +494,62 @@
 
 
     {
-      "question": "When the LLM explanation mentions \"elevated blood pressure indicates neurological risk,\" what would you ask to verify if blood pressure readings were ever used in the model?",
+      "question": "If the LLM explanation mentions \"elevated blood pressure indicates neurological risk,\" what would you ask to verify if the system actually used blood pressure as an input?",
       "options": [
-        "Did the model actually use blood pressure measurements as part of its feature inputs?",
-        "What Gini impurity threshold triggered splits on blood pressure values?",
-        "How many trees predicted Hypoglycemia based on blood pressure?",
-        "Why does softmax normalize blood pressure scores in the output?"
+        "Did the model actually use blood pressure measurements when making its prediction?",
+        "At what point did the system split decisions based on blood pressure?",
+        "How many trees voted for Hypoglycemia based on blood pressure?",
+        "How does the system decide the importance of blood pressure when choosing which specialist to recommend?"
       ],
       "answer": "1"
     },
     {
-      "question": "Explain why averaging many decision trees reduces model variance.",
+      "question": "Why does combining the votes of many trees make the system's predictions more stable?",
       "options": [
-        "It smooths out noisy decisions by combining predictions from many diverse trees",
-        "It selects the deepest tree to guide the rest during aggregation",
-        "It reduces variance by ignoring low-importance features during splits",
-        "It switches from Gini to entropy to stabilize predictions"
+        "Because it balances out random or noisy decisions by averaging many different trees",
+        "Because it picks the deepest tree and lets it guide the others",
+        "Because it ignores low-importance symptoms in the trees during splits",
+        "Because it applies a smoothing step after the trees vote to make the predictions more consistent"
       ],
       "answer": "1"
     },
     {
-      "question": "Why does softmax assign a small probability to the second specialist instead of showing only one?",
+      "question": "Why does the system still show a small percentage for the second specialist instead of just showing the top one?",
       "options": [
-        "Because softmax distributes some probability mass to every class based on model logits",
-        "Because two specialist outputs are hardcoded into the interface",
-        "Because Gini impurity thresholds drive the softmax behavior",
-        "Because showing multiple probabilities improves UI clarity"
+        "Because the system spreads some score across all specialists so users can see less likely options too",
+        "Because the interface is set up to always show two specialists and therefore the system must provide two recommendations",
+        "Because the tree calculations are designed in a way that force two scores to appear",
+        "Because showing more recommendation looks clearer in the final results"
       ],
       "answer": "1"
     },
     {
-      "question": "Although Alice's predicted diseases (Migraine, Hypertension, Hypoglycemia) have similar confidence scores, the system strongly recommends a Neurologist (92.3%). What best explains this?",
+      "question": "Although Alice's predicted diseases (Migraine, Hypertension, Hypoglycemia) have similar scores, the system strongly recommends a Neurologist (92.3%). What best explains this?",
       "options": [
         "Because multiple predicted diseases share strong associations with neurological care, boosting their combined specialist score",
-        "Because the system defaults to Neurology when disease probabilities are close together",
-        "The system averages disease and specialist probabilities directly, so similar inputs yield one high output.",
-        "Because softmax forces one specialist to exceed 90% whenever three diseases are predicted"
+        "Because the system defaults to Neurologist as the top specialist when disease probabilities are close together",
+        "Because the system directly averages disease and specialist scores, so one specialist comes out highest",
+        "Because the system is designed to always make one recommendation with high score (exceeding 90%)"
       ],
       "answer": "1"
     },
     {
-      "question": "Why doesn't the model simply return a single most likely diagnosis and specialist?",
+      "question": "Why does the system show more than one possible disease and specialist instead of just the top one?",
       "options": [
         "Because it allows to communicate uncertainty and provide alternative plausible options",
-        "Because the softmax layer is implemented to output a full probability distribution by design",
-        "Because the API contract requires arrays of predictions for downstream processing",
-        "Because specialist recommendations rely on comparative scores across multiple diseases"
+        "Because the system is built to show a full list of possibilities",
+        "Because the system's design requires more than one output for later steps",
+        "Because specialist scores rely on comparative scores across multiple diseases"
       ],
       "answer": "1"
     },
     {
-      "question": "Why is it helpful to show confidence scores (e.g. 92% Neurologist, 4% Endocrinologist) instead of only showing labels?",
+      "question": "Why does the system show percentages (e.g. Neurologist - 92% , Endocrinologist - 4%) next to the specialist names?",
       "options": [
-        "Because it shows how certain the system is and highlights any ambiguity in specialist recommendations",
-        "Because the modeL's API always returns numerical outputs alongside labels",
-        "Because LLM-derived explanations require quantitative probabilities to generate narratives",
-        "Because confidence percentages trigger deeper analytics in downstream modules"
+        "To show how sure the system is about each recommendation and to highlight where there's uncertainty",
+        "Because the system's design always outputs numbers and names together",
+        "Because LLM-derived explanations require percentage scored and names to generate narratives",
+        "Because the percentages reflect how often each specialist was selected in similar past cases"
       ],
       "answer": "1"
     },
@@ -558,72 +558,72 @@
 
 
     {
-      "question": "Why might removing 'slurred speech' from Alice's input cause Neurologist to no longer be the top specialist?",
+      "question": "Why could removing 'slurred speech' from Alice's symptoms make the system stop recommending a Neurologist?",
       "options": [
-        "Because slurred speech is a critical discriminative feature for neurological conditions, and without it, the probability shifts away from Neurologists",
-        "Because the model heavily relies on key neurological symptoms like slurred speech to weight specialist scores, so its absence lowers confidence for all specialists",
-        "Because removing slurred speech causes the model to adjust predictions based on remaining symptoms, which the model may not be able to decode",
-        "Because missing symptoms cause the input vector to be incomplete and reduce model confidence across all output classes"
+        "Because slurred speech is a is a key symptom for neurological conditions, and without it the score for a Neurologist recommendation drops",
+        "Because the system depends heavily on key Neurological symptoms like slurred speech, so removing it lowers confidence in all predictions",
+        "Because removing symptoms confuses the system, and it cannot figure out the correct prediction",
+        "Because missing symptoms leave the input incomplete and lower confidence for all outcomes"
       ],
       "answer": "1"
     },
     {
-      "question": "Could Alice's headache be caused by dehydration rather than Migraine? What question reveals this?",
+      "question": "What question could you ask to check if Alice's headache is from dehydration instead of Migraine?",
       "options": [
         "Could headache indicate dehydration instead of Migraine?",
-        "What Logistic Regression solver was used for Migraine prediction?",
-        "How many symptoms contributed to the dehydration score?",
-        "Why do predicted probabilities for dehydration and Migraine sum to 100%?"
+        "Which method was used to decide on Migraine?",
+        "How many symptoms contributed to the score for dehydration?",
+        "Do the scores for dehydration and Migraine add up to 100%?"
       ],
       "answer": "1"
     },
     {
-      "question": "If the true diagnosis were stroke but it only scored 8%, what might that imply about the model?",
+      "question": "If stroke is the real problem but the system only gives it 8%, what does that tell you?",
       "options": [
-        "It may confuse stroke symptoms with those of Migraine",
-        "It implies stroke is merged under Hypertension predictions",
-        "It indicates the specialist model suppressed stroke scores",
-        "It shows the model treats stroke as a rare event"
+        "The system may confuse stroke symptoms with those of Migraine",
+        "The system combines stroke into the Hypertension category",
+        "It indicates the specialist model within the system lowers the stroke score",
+        "The system treats stroke as a rare condition"
       ],
       "answer": "1"
     },
     {
       "question": "If two patients have different top-3 labels but the same probabilities in the same order, how will their specialist recommendations compare?",
       "options": [
-        "Same specialists same order",
-        "Same specialists reversed order",
-        "Completely different specialists",
+        "They will get the same specialists in the same order",
+        "They will get the same specialists but in reversed order",
+        "They will get completely different specialists",
         "Cannot tell without symptom data"
       ],
       "answer": "3"
     },
     {
-      "question": "What would happen if only one disease label were passed to the specialist model?",
+      "question": "What happens if the system only uses one predicted disease to recommend specialists?",
       "options": [
-        "It would produce skewed probability outputs due to lack of sufficient one-hot encoding context",
-        "The specialist model would throw an error for missing input dimensions and fail to run",
-        "Softmax would collapse to giving full probability to the single class with no alternatives",
-        "It would impute zeros for missing classes, leading to distorted specialist probability distribution"
+        "The predictions become less balanced because the system has less information",
+        "The system fails to run because it expects more information",
+        "The scores all go to one specialist because there are no alternatives",
+        "The system fills in missing diseases with zeros, which distorts the results"
       ],
       "answer": "1"
     },
     {
-      "question": "If Alice had only reported dizziness and visual disturbances but not slurred speech or headache, how might the disease and specialist predictions change?",
+      "question": "If Alice only reported dizziness and vision problems, and not slurred speech or headache, how would the predictions likely change?",
       "options": [
-        "Neurological conditions would remain likely due to the two symptoms being linked to such cases",
-        "The model would default to cardiac conditions because dizziness alone favors them strongly",
-        "It would trigger an error since at least three symptoms are required for accurate predictions",
-        "The prediction would revert to a random distribution because the input vector lacks sufficient features"
+        "Neurological conditions would still be likely because those two symptoms are linked to them",
+        "The system would switch to recommending a Cardiologist because dizziness strongly suggests heart issues",
+        "The system would stop working because at least three symptoms are required",
+        "The system would produce random results because it lacks enough information"
       ],
       "answer": "1"
     },
     {
-      "question": "If Alice had reported nausea instead of slurred speech, how might the specialist recommendation change?",
+      "question": "If Alice had reported nausea instead of slurred speech, how might the system's recommended specialists change?",
       "options": [
-        "It might lower the Neurologist's confidence and increase chances of recommending an Endocrinologist",
-        "The model would ignore nausea since it is not part of the original input feature set",
-        "It would automatically add a Gastroenterologist as the primary specialist because nausea is always linked to that particular specialist",
-        "Specialist predictions would remain unchanged because the system only uses the top disease label"
+        "The system's confidence in a Neurologist might go down, and the chance of recommending an Endocrinologist could go up",
+        "The system would ignore nausea because it wasn't part of the training examples",
+        "The system would automatically recommend a Gastroenterologist because nausea always leads to that particular specialist in the system",
+        "The specialist recommendation would stay the same because only the top ppredicted diseases matter"
       ],
       "answer": "1"
     }
@@ -712,7 +712,7 @@
       "answer": "1"
     },
     {
-      "question": "Explain why averaging many trees reduces prediction variance.",
+      "question": "Explain why averaging many trees reduces prediction variance",
       "options": [
         "Combining multiple tree predictions helps cancel out inconsistent errors across individual trees",
         "It picks the tree with the highest accuracy and favors its prediction",
