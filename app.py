@@ -210,54 +210,66 @@ elif st.session_state.page == "quiz":
 
         write_submissions(username, answers, shuffled_qs)
 
-        # Compute score
-        # Score
-        num_correct = 0
-        for q in shuffled_qs:
-            qid = q["id"]
-            selected = answers.get(qid)
-            if selected is None:
-                continue
+        st.session_state.page = "quiz_submission"
+        st.rerun()
 
-            # Get the original index of selected option
-            original_index = st.session_state["shuffled_to_original_map"][qid].get(selected, -1)
 
-            # Check if this original index matches correct_index
-            if original_index == q["correct_index"]:
-                num_correct += 1
-
-        st.success(f"Thanks, **{username}**! You answered **{num_correct}** questions correctly.")
-
-        st.write("---")
-        # Show per-question feedback
-        # Show per-question feedback
-        for idx, q in enumerate(shuffled_qs):
-            qid = q["id"]
-            prompt = q["prompt"]
-            chosen = answers.get(qid)
-            
-            st.markdown(f"**Q{idx + 1}. {prompt}**")
-
-            if chosen is None:
-                st.markdown("<span style='color:gray;'>No answer selected.</span>", unsafe_allow_html=True)
-                continue
-
-            original_index = st.session_state["shuffled_to_original_map"][qid].get(chosen, -1)
-            is_correct = original_index == q["correct_index"]
-
-            color = "green" if is_correct else "red"
-            status = "Correct" if is_correct else "Incorrect"
-
-            st.markdown(
-                f"<span style='color:{color};'><b>Your answer:</b> {chosen}</span><br>"
-                f"<span style='color:{color};'><i>{status}</i></span>",
-                unsafe_allow_html=True
-            )
-
-        if st.button("Go To Survey"):
-            st.session_state.page = "post_quiz"
-            st.rerun()
+elif st.session_state.page == "quiz_submission":
     
+
+
+    username = st.session_state.get("username", "anonymous")
+    answers = st.session_state["answers"]
+    shuffled_qs = st.session_state["shuffled_questions"]
+    # Compute score
+    # Score
+    num_correct = 0
+    for q in shuffled_qs:
+        qid = q["id"]
+        selected = answers.get(qid)
+        if selected is None:
+            continue
+
+        # Get the original index of selected option
+        original_index = st.session_state["shuffled_to_original_map"][qid].get(selected, -1)
+
+        # Check if this original index matches correct_index
+        if original_index == q["correct_index"]:
+            num_correct += 1
+
+    st.success(f"Thanks, **{username}**! You answered **{num_correct}** questions correctly.")
+
+    st.write("---")
+    # Show per-question feedback
+    # Show per-question feedback
+    for idx, q in enumerate(shuffled_qs):
+        qid = q["id"]
+        prompt = q["prompt"]
+        chosen = answers.get(qid)
+        
+        st.markdown(f"**Q{idx + 1}. {prompt}**")
+
+        if chosen is None:
+            st.markdown("<span style='color:gray;'>No answer selected.</span>", unsafe_allow_html=True)
+            continue
+
+        original_index = st.session_state["shuffled_to_original_map"][qid].get(chosen, -1)
+        is_correct = original_index == q["correct_index"]
+
+        color = "green" if is_correct else "red"
+        status = "Correct" if is_correct else "Incorrect"
+
+        st.markdown(
+            f"<span style='color:{color};'><b>Your answer:</b> {chosen}</span><br>"
+            f"<span style='color:{color};'><i>{status}</i></span>",
+            unsafe_allow_html=True
+        )
+
+
+    if st.button("Go To Survey"):
+        st.session_state.page = "post_quiz"
+        st.rerun()
+
 elif st.session_state.page == "post_quiz":
     username = st.session_state.get("username", "anonymous")
     st.markdown("### Post Quiz Survey")
