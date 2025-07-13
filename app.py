@@ -142,13 +142,16 @@ elif st.session_state.page == "quiz":
             qid = q["id"]
             prompt = q["prompt"]
             opts = st.session_state["options_shuffled"][qid]
+            st.markdown(f"**Q{idx+1}. {prompt}**")
             st.radio(
-                label=f"Q{idx+1}. {prompt}",
+                label = f"**Q{idx+1}. {prompt}**",
+                label_visibility = "collapsed",
                 options=opts,
                 index=None,
                 key=f"q_{qid}",
                 on_change=lambda qid=qid: on_option_change(qid),
             )
+            st.markdown("")
 
 
         st.write("---")
@@ -326,14 +329,18 @@ elif st.session_state.page == "post_quiz":
 
         question = q["question"]
         qid = q["id"]
+        
+        st.markdown(f"**Q{idx+1}. {question}**")
         st.radio(
             label=f"Q{idx+1}. {question}",
+            label_visibility = "collapsed",
             options=opts,
             index=None,
             key=f"q_{qid}",
             horizontal = True,
             on_change = lambda qid=qid:post_quiz_on_option_change(qid)
         )
+        st.markdown("")
     
     if st.button("Submit"):
         unanswered = [qid for qid, ans in st.session_state.post_quiz_answers.items() if ans is None]
