@@ -300,6 +300,9 @@ elif st.session_state.page == "post_quiz":
     with col1:
         st.write("#### 📝 Please complete the following survey")
         st.markdown(f"*Rate each statement on a scale of {opts[0]} (Strongly Disagree) to {opts[-1]} (Strongly Agree).*")
+        st.markdown(
+            """This survey helps us understand how well the AI explanations supported your trust in the system and your ability to choose the next steps for the patient's care in the given scenario. Your feedback will help us improve the clarity and usefulness of the explanations for future users."""
+        )
     with col2:
         table_rows = "".join(
             f"<tr><td style='padding: 4px 12px; text-align: center;'>{val}</td><td style='padding: 4px 12px;'>{label}</td></tr>"
