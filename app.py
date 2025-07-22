@@ -1,6 +1,7 @@
 import streamlit as st
 import random
 from supabase import create_client
+import time
 
 SUPABASE_URL = st.secrets["supabase"]["url"]
 SUPABASE_KEY = st.secrets["supabase"]["key"]
@@ -102,6 +103,7 @@ if st.session_state.page == "home":
         st.session_state.page = "quiz"
         st.session_state["patient_name"] = selected_patient
         st.session_state["username"] = username.strip()
+        st.session_state["quiz_start_time"] = time.time()
         st.rerun()
 
 elif st.session_state.page == "quiz":
@@ -179,6 +181,8 @@ elif st.session_state.page == "quiz":
             all_questions = {q["id"]: q for q in load_all_questions(st.session_state["patient_name"])}
             records = []
 
+            quiz_duration_sec = int(time.time() - st.session_state.get("quiz_start_time", time.time()))
+
             for q in shuffled_qs:
                 qid = q["id"]
                 chosen = answers.get(qid)
@@ -200,6 +204,7 @@ elif st.session_state.page == "quiz":
                     "chosen_option": chosen_str,
                     "is_correct": is_corr,
                     "patient_name": st.session_state["patient_name"],
+                    "quiz_time": quiz_duration_sec
                 })
 
             try:
