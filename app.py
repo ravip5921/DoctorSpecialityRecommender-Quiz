@@ -296,36 +296,11 @@ elif st.session_state.page == "post_quiz":
         }
 
         
-    col1, col2 = st.columns([3, 2])
-    with col1:
-        st.write("#### 📝 Please complete the following survey")
-        st.markdown(f"*Rate each statement on a scale of {opts[0]} (Strongly Disagree) to {opts[-1]} (Strongly Agree).*")
-        st.markdown(
-            """This survey helps us understand how well the AI explanations supported your trust in the system and your ability to choose the next steps for the patient's care in the given scenario. Your feedback will help us improve the clarity and usefulness of the explanations for future users."""
-        )
-    with col2:
-        table_rows = "".join(
-            f"<tr><td style='padding: 4px 12px; text-align: center;'>{val}</td><td style='padding: 4px 12px;'>{label}</td></tr>"
-            for val, label in likert_labels.items()
-        )
-
-        legend_html = f"""
-        <div style='text-align:right; font-size: 0.9em;'>
-        <strong>Legend:</strong><br><br>
-        <table style='border-collapse: collapse; margin-left: auto;'>
-            <thead>
-                <tr>
-                    <th style='text-align: center; padding: 4px 12px;'>Value</th>
-                    <th style='text-align: left; padding: 4px 12px;'>Label</th>
-                </tr>
-            </thead>
-            <tbody>
-                {table_rows}
-            </tbody>
-        </table>
-        </div>
-        """
-        st.markdown(legend_html, unsafe_allow_html=True)
+    st.write("#### 📝 Please complete the following survey")
+    st.markdown(
+        """This survey helps us understand how well the AI explanations supported your trust in the system and your ability to choose the next steps for the patient's care in the given scenario. Your feedback will help us improve the clarity and usefulness of the explanations for future users."""
+    )
+    
     st.write("---")
 
     if "post_quiz_questions" not in st.session_state:        
@@ -339,22 +314,35 @@ elif st.session_state.page == "post_quiz":
     def post_quiz_on_option_change(qid):
             st.session_state["post_quiz_answers"][qid] = st.session_state.get(f"q_{qid}", None)
     
-    
     for idx,q in enumerate (st.session_state.post_quiz_questions):
 
         question = q["question"]
         qid = q["id"]
         
         st.markdown(f"**Q{idx+1}. {question}**")
-        st.radio(
-            label=f"Q{idx+1}. {question}",
-            label_visibility = "collapsed",
-            options=opts,
-            index=None,
-            key=f"q_{qid}",
-            horizontal = True,
-            on_change = lambda qid=qid:post_quiz_on_option_change(qid)
-        )
+        col1,col2,col3 = st.columns([2.5, 6, 2])
+        with col1:
+            st.markdown("""
+            <div style='display:flex; align-items:center; height:100%; padding-top:0.5rem'>
+                Strongly Disagree
+            </div>
+            """, unsafe_allow_html=True)
+        with col2:
+            st.radio(
+                label=f"Q{idx+1}. {question}",
+                label_visibility = "collapsed",
+                options=opts,
+                index=None,
+                key=f"q_{qid}",
+                horizontal = True,
+                on_change = lambda qid=qid:post_quiz_on_option_change(qid)
+            )
+        with col3:
+            st.markdown("""
+            <div style='display:flex; align-items:center; height:100%; padding-top:0.5rem'>
+                Strongly Agree
+            </div>
+            """, unsafe_allow_html=True)
         st.markdown("")
     
     if st.button("Submit"):
@@ -387,3 +375,4 @@ elif st.session_state.page == "post_quiz":
             write_post_quiz_submissions(username, st.session_state.post_quiz_questions, st.session_state.post_quiz_answers)
         
     st.stop()
+
