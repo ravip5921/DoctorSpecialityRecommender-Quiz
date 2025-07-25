@@ -374,8 +374,8 @@ elif st.session_state.page == "quiz":
 
         write_submissions(username, answers, shuffled_qs, quiz_log_id)
 
-        # st.session_state.page = "quiz_submission"
-        # st.rerun()
+        st.session_state.page = "quiz_submission"
+        st.rerun()
 
 elif st.session_state.page == "quiz_submission":
     
