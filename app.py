@@ -106,9 +106,124 @@ if st.session_state.page == "home":
         st.session_state["quiz_start_time"] = time.time()
         st.rerun()
 
+# elif st.session_state.page == "quiz":
+#     # --- Session State Initialization ---
+#     if "shuffled_questions" not in st.session_state:
+#         all_qs = load_all_questions(st.session_state["patient_name"])
+#         random.shuffle(all_qs)
+
+#         st.session_state["shuffled_questions"] = all_qs
+#         st.session_state["options_shuffled"] = {}
+#         st.session_state["shuffled_to_original_map"] = {}
+
+#         for q in all_qs:
+#             original_opts = q["options"]
+#             shuffled_opts = original_opts.copy()
+#             random.shuffle(shuffled_opts)
+
+#             # Map each shuffled option to its original index (0-based)
+#             mapping = {shuffled_opt: original_opts.index(shuffled_opt) for shuffled_opt in shuffled_opts}
+
+#             st.session_state["options_shuffled"][q["id"]] = shuffled_opts
+#             st.session_state["shuffled_to_original_map"][q["id"]] = mapping
+
+#         st.session_state["answers"] = {q["id"]: None for q in all_qs}
+#         st.session_state["submitted"] = False
+
+#     # --- Answer Change Callback ---
+#     def on_option_change(qid):
+#         st.session_state["answers"][qid] = st.session_state.get(f"q_{qid}", None)
+
+#     # --- Main UI Before Submission ---
+#     if not st.session_state["submitted"]:
+#         st.title("DSR System Quiz")
+#         st.markdown(f"**User:** {st.session_state['username']}")
+#         st.write("---")
+#         # Render each question in the shuffled order
+#         for idx, q in enumerate(st.session_state["shuffled_questions"]):
+#             qid = q["id"]
+#             prompt = q["prompt"]
+#             opts = st.session_state["options_shuffled"][qid]
+#             st.markdown(f"**Q{idx+1}. {prompt}**")
+#             st.radio(
+#                 label = f"**Q{idx+1}. {prompt}**",
+#                 label_visibility = "collapsed",
+#                 options=opts,
+#                 index=None,
+#                 key=f"q_{qid}",
+#                 on_change=lambda qid=qid: on_option_change(qid),
+#             )
+#             st.markdown("")
+
+
+#         st.write("---")
+        
+#         # Answer count
+#         num_answered = sum(ans is not None for ans in st.session_state["answers"].values())
+#         total_qs = len(st.session_state["shuffled_questions"])
+#         st.info(f"**{num_answered} out of {total_qs}** questions answered.")
+
+#         # Submission
+#         if st.button("Submit"):
+#             if not st.session_state["username"].strip():
+#                 st.warning("Please enter your name before submitting.")
+#             else:
+#                 st.session_state["submitted"] = True
+#                 st.rerun()
+
+#     else:
+#         username = st.session_state.get("username", "anonymous")
+#         answers = st.session_state["answers"]
+#         shuffled_qs = st.session_state["shuffled_questions"]
+#         supabase = create_client(SUPABASE_URL, SUPABASE_KEY)
+
+#         def write_submissions(username, answers, shuffled_qs):
+#             all_questions = {q["id"]: q for q in load_all_questions(st.session_state["patient_name"])}
+#             records = []
+
+#             quiz_duration_sec = int(time.time() - st.session_state.get("quiz_start_time", time.time()))
+
+#             for q in shuffled_qs:
+#                 qid = q["id"]
+#                 chosen = answers.get(qid)
+#                 if chosen is None:
+#                     chosen_str = None
+#                     is_corr = False
+#                 else:
+#                     # Use original option mapping to determine correctness
+#                     original_index = st.session_state["shuffled_to_original_map"][qid].get(chosen, -1)
+#                     correct_index = all_questions[qid]["correct_index"]
+#                     correct_option = all_questions[qid]["options"][correct_index]
+
+#                     chosen_str = chosen
+#                     is_corr = (original_index == correct_index)
+
+#                 records.append({
+#                     "username": username,
+#                     "question_id": qid,
+#                     "chosen_option": chosen_str,
+#                     "is_correct": is_corr,
+#                     "patient_name": st.session_state["patient_name"],
+#                     "quiz_time": quiz_duration_sec
+#                 })
+
+#             try:
+#                 response = supabase.table("patient_submissions").insert(records).execute()
+#                 st.success("Results submitted successfully.")
+#             except Exception as e:
+#                 st.error(f"Failed to save results: {e}")
+
+#         write_submissions(username, answers, shuffled_qs)
+
+#         st.session_state.page = "quiz_submission"
+#         st.rerun()
+
 elif st.session_state.page == "quiz":
-    # --- Session State Initialization ---
+    import uuid
+    from datetime import datetime
+
     if "shuffled_questions" not in st.session_state:
+        st.session_state["quiz_start_time"] = time.time()
         all_qs = load_all_questions(st.session_state["patient_name"])
         random.shuffle(all_qs)
 
@@ -120,34 +235,59 @@ elif st.session_state.page == "quiz":
             original_opts = q["options"]
             shuffled_opts = original_opts.copy()
             random.shuffle(shuffled_opts)
-
-            # Map each shuffled option to its original index (0-based)
             mapping = {shuffled_opt: original_opts.index(shuffled_opt) for shuffled_opt in shuffled_opts}
-
             st.session_state["options_shuffled"][q["id"]] = shuffled_opts
             st.session_state["shuffled_to_original_map"][q["id"]] = mapping
 
         st.session_state["answers"] = {q["id"]: None for q in all_qs}
+        st.session_state["question_start_times"] = {}  # qid → when displayed
+        st.session_state["question_times"] = {}        # qid → time taken
+        st.session_state["question_submit_times"] = {}
+        st.session_state["answer_order"] = []
+
         st.session_state["submitted"] = False
 
-    # --- Answer Change Callback ---
     def on_option_change(qid):
+        now = time.time()
+
+        # First answer for this question
+        if qid not in st.session_state["question_submit_times"]:
+            st.session_state["question_submit_times"][qid] = now
+            st.session_state["answer_order"].append(qid)
+
+            if len(st.session_state["answer_order"]) == 1:
+                # First question answered → use render time
+                q_start = st.session_state["question_start_times"].get(qid, st.session_state["quiz_start_time"])
+            else:
+                # Get time of previous answered question
+                prev_qid = st.session_state["answer_order"][-2]
+                q_start = st.session_state["question_submit_times"][prev_qid]
+
+            elapsed = now - q_start
+            st.session_state["question_times"][qid] = elapsed
+
+        # Save the selected option
         st.session_state["answers"][qid] = st.session_state.get(f"q_{qid}", None)
 
-    # --- Main UI Before Submission ---
+
     if not st.session_state["submitted"]:
         st.title("DSR System Quiz")
         st.markdown(f"**User:** {st.session_state['username']}")
         st.write("---")
-        # Render each question in the shuffled order
+
         for idx, q in enumerate(st.session_state["shuffled_questions"]):
             qid = q["id"]
             prompt = q["prompt"]
             opts = st.session_state["options_shuffled"][qid]
+
+            # record first render time
+            if qid not in st.session_state["question_start_times"]:
+                st.session_state["question_start_times"][qid] = time.time()
+
             st.markdown(f"**Q{idx+1}. {prompt}**")
             st.radio(
-                label = f"**Q{idx+1}. {prompt}**",
-                label_visibility = "collapsed",
+                label=f"Q{idx+1}. {prompt}",
+                label_visibility="collapsed",
                 options=opts,
                 index=None,
                 key=f"q_{qid}",
@@ -155,21 +295,15 @@ elif st.session_state.page == "quiz":
             )
             st.markdown("")
 
-
         st.write("---")
-        
-        # Answer count
+
         num_answered = sum(ans is not None for ans in st.session_state["answers"].values())
         total_qs = len(st.session_state["shuffled_questions"])
         st.info(f"**{num_answered} out of {total_qs}** questions answered.")
 
-        # Submission
         if st.button("Submit"):
-            if not st.session_state["username"].strip():
-                st.warning("Please enter your name before submitting.")
-            else:
-                st.session_state["submitted"] = True
-                st.rerun()
+            st.session_state["submitted"] = True
+            st.rerun()
 
     else:
         username = st.session_state.get("username", "anonymous")
@@ -177,11 +311,39 @@ elif st.session_state.page == "quiz":
         shuffled_qs = st.session_state["shuffled_questions"]
         supabase = create_client(SUPABASE_URL, SUPABASE_KEY)
 
-        def write_submissions(username, answers, shuffled_qs):
+        quiz_log_id = str(uuid.uuid4())
+        started_at = datetime.fromtimestamp(st.session_state["quiz_start_time"]).isoformat()
+        submitted_at = datetime.now().isoformat()
+
+        # Prepare answered_times JSON
+        answered_times = [
+            {
+                "qid": q["id"],
+                "time_taken": st.session_state["question_times"].get(q["id"], None)
+            }
+            for q in shuffled_qs
+        ]
+
+        # Write to quiz_logs table
+        quiz_log = {
+            "quiz_log_id": quiz_log_id,
+            "username": username,
+            "patient_name": st.session_state["patient_name"],
+            "started_at": started_at,
+            "submitted_at": submitted_at,
+            "answered_times": answered_times
+        }
+
+        try:
+            supabase.table("quiz_logs").insert([quiz_log]).execute()
+            st.success("Quiz log recorded.")
+        except Exception as e:
+            st.error(f"Failed to save quiz log: {e}")
+
+        # Write to patient_submissions table
+        def write_submissions(username, answers, shuffled_qs, quiz_log_id):
             all_questions = {q["id"]: q for q in load_all_questions(st.session_state["patient_name"])}
             records = []
-
-            quiz_duration_sec = int(time.time() - st.session_state.get("quiz_start_time", time.time()))
 
             for q in shuffled_qs:
                 qid = q["id"]
@@ -190,34 +352,30 @@ elif st.session_state.page == "quiz":
                     chosen_str = None
                     is_corr = False
                 else:
-                    # Use original option mapping to determine correctness
                     original_index = st.session_state["shuffled_to_original_map"][qid].get(chosen, -1)
                     correct_index = all_questions[qid]["correct_index"]
-                    correct_option = all_questions[qid]["options"][correct_index]
-
                     chosen_str = chosen
                     is_corr = (original_index == correct_index)
 
                 records.append({
+                    "quiz_time": quiz_log_id,
                     "username": username,
                     "question_id": qid,
                     "chosen_option": chosen_str,
                     "is_correct": is_corr,
-                    "patient_name": st.session_state["patient_name"],
-                    "quiz_time": quiz_duration_sec
+                    "patient_name": st.session_state["patient_name"]
                 })
 
             try:
-                response = supabase.table("patient_submissions").insert(records).execute()
-                st.success("Results submitted successfully.")
+                supabase.table("patient_submissions").insert(records).execute()
+                st.success("Patient submissions recorded.")
             except Exception as e:
-                st.error(f"Failed to save results: {e}")
+                st.error(f"Failed to save patient submissions: {e}")
 
-        write_submissions(username, answers, shuffled_qs)
+        write_submissions(username, answers, shuffled_qs, quiz_log_id)
 
-        st.session_state.page = "quiz_submission"
-        st.rerun()
-
+        # st.session_state.page = "quiz_submission"
+        # st.rerun()
 
 elif st.session_state.page == "quiz_submission":
     
